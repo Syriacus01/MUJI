@@ -11,7 +11,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
-// MARK : 코드베이스 구현을 위해 SceneDelegate 수정
+// MARK: 코드베이스 구현을 위해 SceneDelegate 수정
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return } // guard let 바인딩으로 UIWindowScene 유효성 검사
         
