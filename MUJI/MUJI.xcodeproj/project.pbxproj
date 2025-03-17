@@ -10,23 +10,20 @@
 		55A6B9992D854F3B0042DF74 /* MUJI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MUJI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		55A6B9AE2D854F3C0042DF74 /* Exceptions for "MUJI" folder in "MUJI" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = 55A6B9982D854F3B0042DF74 /* MUJI */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		55A6B99B2D854F3B0042DF74 /* MUJI */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				55A6B9AE2D854F3C0042DF74 /* Exceptions for "MUJI" folder in "MUJI" target */,
-			);
 			path = MUJI;
+			sourceTree = "<group>";
+		};
+		55DA579C2D87BBD100BCE73C /* Models */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Models;
+			sourceTree = "<group>";
+		};
+		55DA57BB2D880A7700BCE73C /* ViewModels */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -47,6 +44,8 @@
 			children = (
 				55A6B99B2D854F3B0042DF74 /* MUJI */,
 				55A6B99A2D854F3B0042DF74 /* Products */,
+				55DA579C2D87BBD100BCE73C /* Models */,
+				55DA57BB2D880A7700BCE73C /* ViewModels */,
 			);
 			sourceTree = "<group>";
 		};
@@ -75,6 +74,8 @@
 			);
 			fileSystemSynchronizedGroups = (
 				55A6B99B2D854F3B0042DF74 /* MUJI */,
+				55DA579C2D87BBD100BCE73C /* Models */,
+				55DA57BB2D880A7700BCE73C /* ViewModels */,
 			);
 			name = MUJI;
 			packageProductDependencies = (
