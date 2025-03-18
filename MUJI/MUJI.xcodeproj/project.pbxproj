@@ -10,9 +10,27 @@
 		55A6B9992D854F3B0042DF74 /* MUJI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MUJI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		550473552D890ACB0046417D /* Exceptions for "MUJI" folder in "MUJI" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 55A6B9982D854F3B0042DF74 /* MUJI */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		550473432D8905650046417D /* Models 2 */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Models 2";
+			sourceTree = "<group>";
+		};
 		55A6B99B2D854F3B0042DF74 /* MUJI */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				550473552D890ACB0046417D /* Exceptions for "MUJI" folder in "MUJI" target */,
+			);
 			path = MUJI;
 			sourceTree = "<group>";
 		};
@@ -46,6 +64,7 @@
 				55A6B99A2D854F3B0042DF74 /* Products */,
 				55DA579C2D87BBD100BCE73C /* Models */,
 				55DA57BB2D880A7700BCE73C /* ViewModels */,
+				550473432D8905650046417D /* Models 2 */,
 			);
 			sourceTree = "<group>";
 		};
@@ -73,6 +92,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				550473432D8905650046417D /* Models 2 */,
 				55A6B99B2D854F3B0042DF74 /* MUJI */,
 				55DA579C2D87BBD100BCE73C /* Models */,
 				55DA57BB2D880A7700BCE73C /* ViewModels */,
