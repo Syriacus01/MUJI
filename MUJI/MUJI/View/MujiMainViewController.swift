@@ -1,23 +1,26 @@
 import UIKit
 import MapKit
+import CoreLocation
 
-class MujiMainViewController: UIViewController, UITabBarDelegate {
+class MujiMainViewController: UIViewController, UITabBarDelegate, CLLocationManagerDelegate, MKMapViewDelegate {
     
-    private let mapView = MKMapView() //  지도 항상 유지
-    private let tabBarView = UITabBar() //  커스텀 탭바
-    private var bottomSheetVC: MujiBottomSheetViewController? //  모달을 한 번만 생성하여 유지
-    
+    private let mapView = MKMapView() // 지도 항상 유지
+    private let tabBarView = UITabBar() // 커스텀 탭바
+    private var bottomSheetVC: MujiBottomSheetViewController? // 모달을 한 번만 생성하여 유지
+    private let locationManager = CLLocationManager() // 위치 관리자 추가
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupMapView()    // 지도 설정
-        setupTabBar()     // 탭바 설정
+        setupTabBar()     // ✅ 기존 setupTabBar 유지
+        setupLocationManager() // ✅ 위치 관리자 설정
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        setupSheetView() //모달 시트 생성
+        setupSheetView() // 모달 시트 생성
 
-        //탭바를 다시 추가 (최상위 유지)
+        // 탭바를 다시 추가 (최상위 유지)
         DispatchQueue.main.async {
             if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                let window = windowScene.windows.first {
@@ -27,15 +30,48 @@ class MujiMainViewController: UIViewController, UITabBarDelegate {
         }
     }
 
-    //지도(MapView) 설정
+    // ✅ 지도(MapView) 설정
     private func setupMapView() {
         mapView.frame = view.bounds
         mapView.mapType = .standard
         mapView.isUserInteractionEnabled = true
+        mapView.showsUserLocation = true // 현재 위치 아이콘 표시
+        mapView.delegate = self
         view.addSubview(mapView)
     }
 
-    // 기존 탭바 설정
+    // ✅ 위치 관리자 설정
+    private func setupLocationManager() {
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestWhenInUseAuthorization() // 위치 권한 요청
+        locationManager.startUpdatingLocation() // 현재 위치 가져오기 시작
+    }
+
+    // ✅ 위치 업데이트 감지
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = locations.last else { return }
+        updateMapRegion(to: location) // ✅ 지도 업데이트
+        locationManager.stopUpdatingLocation() // 위치 업데이트 중지 (배터리 절약)
+    }
+
+    // ✅ 위치 업데이트 실패 처리
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("⛔️ 위치 업데이트 실패: \(error.localizedDescription)")
+    }
+
+    // ✅ 지도 확대 및 현재 위치 설정
+    private func updateMapRegion(to location: CLLocation) {
+        let coordinate = location.coordinate
+        let region = MKCoordinateRegion(
+            center: coordinate,
+            latitudinalMeters: 1000, // 확대 정도 조절
+            longitudinalMeters: 1000
+        )
+        mapView.setRegion(region, animated: true)
+    }
+
+    // ✅ 기존 탭바 설정 유지
     private func setupTabBar() {
         let tabBarHeight: CGFloat = 80
         tabBarView.frame = CGRect(
@@ -57,25 +93,23 @@ class MujiMainViewController: UIViewController, UITabBarDelegate {
         tabBarView.selectedItem = emotionItem
     }
 
-   
+    // ✅ BottomSheet 설정 및 생성
     private func setupSheetView() {
         guard bottomSheetVC == nil else {
-            //print("이미 모달이 생성됨")
             return
         }
 
-        //print("새로운 `bottomSheetVC` 생성 중")
         let bottomSheet = MujiBottomSheetViewController()
         bottomSheet.modalPresentationStyle = .pageSheet
 
-        //`UISheetPresentationController` 설정
+        // UISheetPresentationController 설정
         if let sheet = bottomSheet.sheetPresentationController {
             let smallDetent = UISheetPresentationController.Detent.custom { _ in 180 } // 스몰 크기 설정
             sheet.detents = [smallDetent, .medium(), .large()]
             sheet.prefersGrabberVisible = true
             sheet.largestUndimmedDetentIdentifier = .medium
 
-            //커스텀 스몰사이즈를 기본 크기로 설정
+            // 기본 크기를 스몰로 설정
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 sheet.animateChanges {
                     sheet.selectedDetentIdentifier = sheet.detents.first { $0 == smallDetent }?.identifier
@@ -85,19 +119,53 @@ class MujiMainViewController: UIViewController, UITabBarDelegate {
 
         bottomSheet.isModalInPresentation = true
         bottomSheetVC = bottomSheet
-        ///print("`bottomSheetVC` 생성 완료!")
 
         present(bottomSheet, animated: true) {
-            //print("`bottomSheetVC`가 표시됨")
-
-            //처음 실행 시 감정지도 탭설정
+            // 처음 실행 시 감정지도 탭 설정
             self.bottomSheetVC?.updateContent(for: 0)
         }
     }
 
-    //탭 클릭 감지 및 화면 변경
+    // ✅ 감정 이모지 핀 추가 기능
+    func addEmojiAnnotation(emoji: String, emotion: String) {
+        guard let location = locationManager.location else { return }
+
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = location.coordinate
+        annotation.title = emotion
+        annotation.subtitle = emoji
+        mapView.addAnnotation(annotation)
+    }
+
+    // ✅ 지도에서 이모지 표시 (MKAnnotationView 커스텀)
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        guard !(annotation is MKUserLocation) else { return nil }
+
+        let identifier = "emojiAnnotation"
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
+
+        if annotationView == nil {
+            annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+            annotationView?.canShowCallout = true
+        } else {
+            annotationView?.annotation = annotation
+        }
+
+        if let subtitle = annotation.subtitle, let emoji = subtitle {
+            let label = UILabel()
+            label.text = emoji
+            label.font = UIFont.systemFont(ofSize: 30)
+            label.sizeToFit()
+            annotationView?.image = label.asImage()
+        }
+
+        return annotationView
+    }
+
+
+
+    // ✅ 탭 클릭 감지 및 화면 변경
     func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
-        //print("탭 선택됨: \(item.tag)")
         bottomSheetVC?.updateContent(for: item.tag)
     }
 }

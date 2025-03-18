@@ -15,10 +15,21 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
+				"View/MKMapView+Extensions.swift",
 			);
 			target = 55A6B9982D854F3B0042DF74 /* MUJI */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+		5E1F837F2D89A1E600A3F8A5 /* Exceptions for "MUJI" folder in "Copy Bundle Resources" phase from "MUJI" target */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			buildPhase = 55A6B9972D854F3B0042DF74 /* Resources */;
+			membershipExceptions = (
+				"View/MKMapView+Extensions.swift",
+			);
+		};
+/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		550473432D8905650046417D /* Models 2 */ = {
@@ -30,6 +41,7 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				550473552D890ACB0046417D /* Exceptions for "MUJI" folder in "MUJI" target */,
+				5E1F837F2D89A1E600A3F8A5 /* Exceptions for "MUJI" folder in "Copy Bundle Resources" phase from "MUJI" target */,
 			);
 			path = MUJI;
 			sourceTree = "<group>";
