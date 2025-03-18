@@ -12,8 +12,8 @@ class MujiMainViewController: UIViewController, UITabBarDelegate, CLLocationMana
     override func viewDidLoad() {
         super.viewDidLoad()
         setupMapView()    // 지도 설정
-        setupTabBar()     // ✅ 기존 setupTabBar 유지
-        setupLocationManager() // ✅ 위치 관리자 설정
+        setupTabBar()     // 기존 setupTabBar 유지
+        setupLocationManager() // 위치 관리자 설정
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -30,7 +30,7 @@ class MujiMainViewController: UIViewController, UITabBarDelegate, CLLocationMana
         }
     }
 
-    // ✅ 지도(MapView) 설정
+    // 지도(MapView) 설정
     private func setupMapView() {
         mapView.frame = view.bounds
         mapView.mapType = .standard
@@ -40,7 +40,7 @@ class MujiMainViewController: UIViewController, UITabBarDelegate, CLLocationMana
         view.addSubview(mapView)
     }
 
-    // ✅ 위치 관리자 설정
+    // 위치 관리자 설정
     private func setupLocationManager() {
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
@@ -48,19 +48,19 @@ class MujiMainViewController: UIViewController, UITabBarDelegate, CLLocationMana
         locationManager.startUpdatingLocation() // 현재 위치 가져오기 시작
     }
 
-    // ✅ 위치 업데이트 감지
+    // 위치 업데이트 감지
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else { return }
-        updateMapRegion(to: location) // ✅ 지도 업데이트
+        updateMapRegion(to: location) // 지도 업데이트
         locationManager.stopUpdatingLocation() // 위치 업데이트 중지 (배터리 절약)
     }
 
-    // ✅ 위치 업데이트 실패 처리
+    // 위치 업데이트 실패 처리
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print("⛔️ 위치 업데이트 실패: \(error.localizedDescription)")
+        print(" 위치 업데이트 실패: \(error.localizedDescription)")
     }
 
-    // ✅ 지도 확대 및 현재 위치 설정
+    // 지도 확대 및 현재 위치 설정
     private func updateMapRegion(to location: CLLocation) {
         let coordinate = location.coordinate
         let region = MKCoordinateRegion(
@@ -71,7 +71,7 @@ class MujiMainViewController: UIViewController, UITabBarDelegate, CLLocationMana
         mapView.setRegion(region, animated: true)
     }
 
-    // ✅ 기존 탭바 설정 유지
+    //기존 탭바 설정 유지
     private func setupTabBar() {
         let tabBarHeight: CGFloat = 80
         tabBarView.frame = CGRect(
@@ -93,7 +93,7 @@ class MujiMainViewController: UIViewController, UITabBarDelegate, CLLocationMana
         tabBarView.selectedItem = emotionItem
     }
 
-    // ✅ BottomSheet 설정 및 생성
+    //BottomSheet 설정 및 생성
     private func setupSheetView() {
         guard bottomSheetVC == nil else {
             return
@@ -126,7 +126,7 @@ class MujiMainViewController: UIViewController, UITabBarDelegate, CLLocationMana
         }
     }
 
-    // ✅ 감정 이모지 핀 추가 기능
+    // 감정 이모지 핀 추가 기능
     func addEmojiAnnotation(emoji: String, emotion: String) {
         guard let location = locationManager.location else { return }
 
@@ -137,7 +137,7 @@ class MujiMainViewController: UIViewController, UITabBarDelegate, CLLocationMana
         mapView.addAnnotation(annotation)
     }
 
-    // ✅ 지도에서 이모지 표시 (MKAnnotationView 커스텀)
+    // 지도에서 이모지 표시 (MKAnnotationView 커스텀)
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         guard !(annotation is MKUserLocation) else { return nil }
 
@@ -161,10 +161,21 @@ class MujiMainViewController: UIViewController, UITabBarDelegate, CLLocationMana
 
         return annotationView
     }
+    func changeSheetToSmallSize() {
+            if let sheet = bottomSheetVC?.sheetPresentationController {
+                let smallDetent = UISheetPresentationController.Detent.custom { _ in 180 }
+                DispatchQueue.main.async {
+                    sheet.animateChanges {
+                        sheet.detents = [smallDetent, .medium(), .large()]
+                        sheet.selectedDetentIdentifier = smallDetent.identifier
+                    }
+                }
+            }
+        }
+    
 
 
-
-    // ✅ 탭 클릭 감지 및 화면 변경
+    // 탭 클릭 감지 및 화면 변경
     func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
         bottomSheetVC?.updateContent(for: item.tag)
     }
