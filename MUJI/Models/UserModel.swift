@@ -2,7 +2,7 @@
 //  UserModel.swift
 //  MUJI
 //
-//  Created by 조수원 on 3/17/25.
+//  Created by 조수원 on 3/18/25.
 //
 
 import UIKit
