@@ -6,7 +6,12 @@ extension MKMapView {
     /// 지도 확대 및 현재 위치 설정
     private func updateMapRegion(to location: CLLocation) {
         let coordinate = location.coordinate
-
+        let region = MKCoordinateRegion(
+                center: coordinate,
+                latitudinalMeters: 1000,
+                longitudinalMeters: 1000
+            )
+            mapView.setRegion(region, animated: true)
         // 현재 위치보다 아래쪽을 지도 중심으로 설정하여 사용자가 위쪽에 보이도록 함
         let adjustedCoordinate = CLLocationCoordinate2D(
             latitude: coordinate.latitude - 0.002, // 조절 가능 (값이 크면 더 위로)

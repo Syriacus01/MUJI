@@ -8,6 +8,7 @@ class MujiMainViewController: UIViewController, UITabBarDelegate, CLLocationMana
     private let tabBarView = UITabBar() // 커스텀 탭바
     private var bottomSheetVC: MujiBottomSheetViewController? // 모달을 한 번만 생성하여 유지
     private let locationManager = CLLocationManager() // 위치 관리자 추가
+    private var annotations: [MKPointAnnotation] = [] // 이모지 PIN 저장 배열
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -71,7 +72,7 @@ class MujiMainViewController: UIViewController, UITabBarDelegate, CLLocationMana
         mapView.setRegion(region, animated: true)
     }
 
-    //기존 탭바 설정 유지
+    // 기존 탭바 설정 유지
     private func setupTabBar() {
         let tabBarHeight: CGFloat = 80
         tabBarView.frame = CGRect(
@@ -93,7 +94,7 @@ class MujiMainViewController: UIViewController, UITabBarDelegate, CLLocationMana
         tabBarView.selectedItem = emotionItem
     }
 
-    //BottomSheet 설정 및 생성
+    // BottomSheet 설정 및 생성
     private func setupSheetView() {
         guard bottomSheetVC == nil else {
             return
@@ -126,15 +127,41 @@ class MujiMainViewController: UIViewController, UITabBarDelegate, CLLocationMana
         }
     }
 
-    // 감정 이모지 핀 추가 기능
+    // 감정 이모지 핀 추가 기능 (기존 이모지가 있으면 삭제 후 추가)
     func addEmojiAnnotation(emoji: String, emotion: String) {
         guard let location = locationManager.location else { return }
+        let coordinate = location.coordinate
 
+        // 기존 이모지가 존재하는지 확인 후 삭제
+        removeNearbyAnnotations(near: coordinate)
+
+        // 새로운 이모지 추가
         let annotation = MKPointAnnotation()
-        annotation.coordinate = location.coordinate
+        annotation.coordinate = coordinate
         annotation.title = emotion
         annotation.subtitle = emoji
         mapView.addAnnotation(annotation)
+        annotations.append(annotation)
+    }
+
+    // 근처(50m 이내)에 있는 기존 이모지 PIN 삭제
+    private func removeNearbyAnnotations(near coordinate: CLLocationCoordinate2D) {
+        let threshold: Double = 50.0 // 오차 범위 (50m)
+
+        let existingAnnotations = mapView.annotations.filter { annotation in
+            guard let annotation = annotation as? MKPointAnnotation else { return false }
+            let pinLocation = CLLocation(latitude: annotation.coordinate.latitude, longitude: annotation.coordinate.longitude)
+            let userLocation = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+            return pinLocation.distance(from: userLocation) < threshold
+        }
+
+        // 기존 이모지 삭제
+        existingAnnotations.forEach { annotation in
+            mapView.removeAnnotation(annotation)
+            if let index = annotations.firstIndex(where: { $0 === annotation }) {
+                annotations.remove(at: index)
+            }
+        }
     }
 
     // 지도에서 이모지 표시 (MKAnnotationView 커스텀)
@@ -161,22 +188,21 @@ class MujiMainViewController: UIViewController, UITabBarDelegate, CLLocationMana
 
         return annotationView
     }
+
     func changeSheetToSmallSize() {
-            if let sheet = bottomSheetVC?.sheetPresentationController {
-                let smallDetent = UISheetPresentationController.Detent.custom { _ in 180 }
-                DispatchQueue.main.async {
-                    sheet.animateChanges {
-                        sheet.detents = [smallDetent, .medium(), .large()]
-                        sheet.selectedDetentIdentifier = smallDetent.identifier
-                    }
+        if let sheet = bottomSheetVC?.sheetPresentationController {
+            let smallDetent = UISheetPresentationController.Detent.custom { _ in 180 }
+            DispatchQueue.main.async {
+                sheet.animateChanges {
+                    sheet.detents = [smallDetent, .medium(), .large()]
+                    sheet.selectedDetentIdentifier = smallDetent.identifier
                 }
             }
         }
-    
-
+    }
 
     // 탭 클릭 감지 및 화면 변경
     func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
         bottomSheetVC?.updateContent(for: item.tag)
     }
-}
+} 
