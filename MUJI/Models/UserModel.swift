@@ -1,9 +1,5 @@
-//
 //  UserModel.swift
-//  MUJI
-//
-//  Created by 조수원 on 3/18/25.
-//
+//  Created by 조수원 on 3/18/25
 
 import UIKit
 
@@ -11,6 +7,7 @@ import UIKit
 struct UserModel {
     var name: String
     var age: Int
-    var profileImage: UIImage // 프로필 이미지
-    var musicGenre: String // 음악 장르
+    var profileImage: UIImage
+    var musicGenre: String      // 음악 장르
+    var userInfo: Bool = false  // 사용자 정보 있는지 여부 = 기본값은 사용자 정보 없음
 }
