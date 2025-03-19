@@ -15,7 +15,7 @@ class MujiEmotionMapViewController: UIViewController {
     
     private var sheetController: UISheetPresentationController?
     private var isSmallDetent = true
-    
+    private let emotionViewModel = EmotionViewModel()
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "감정지도"
@@ -76,7 +76,7 @@ class MujiEmotionMapViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         setupUI()
-        
+        emotionViewModel.requestLocation()
         // 현재 시트의 UISheetPresentationController 가져오기
         if let sheet = self.presentationController as? UISheetPresentationController {
             self.sheetController = sheet
@@ -149,15 +149,18 @@ class MujiEmotionMapViewController: UIViewController {
     //저장 버튼 클릭 시 현재 위치에 이모지를 핀으로 추가
     @objc private func saveEmotion() {
         let emoji = selectedEmoji
-        
-        if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate,
-           let window = sceneDelegate.window,
-           let rootVC = window.rootViewController as? MujiMainViewController {
-            
-            rootVC.addEmojiAnnotation(emoji: emoji, emotion: emotionTextField.text ?? "")
-            
-            //MujiMainViewController에게 시트 크기 변경 요청
-            rootVC.changeSheetToSmallSize()
+                let emotionText = emotionTextField.text ?? ""
+                
+                // 감정 데이터 저장 및 콘솔 출력
+                emotionViewModel.saveEmotion(emoji: emoji, emotion: emotionText)
+                
+                // 저장 후 지도에 핀 추가
+                if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate,
+                   let window = sceneDelegate.window,
+                   let rootVC = window.rootViewController as? MujiMainViewController {
+                    
+                    rootVC.addEmojiAnnotation(emoji: emoji, emotion: emotionText)
+                    rootVC.changeSheetToSmallSize()
         }
     }
 }

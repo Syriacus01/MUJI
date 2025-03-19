@@ -105,7 +105,7 @@ class MujiMainViewController: UIViewController, UITabBarDelegate, CLLocationMana
 
         // UISheetPresentationController 설정
         if let sheet = bottomSheet.sheetPresentationController {
-            let smallDetent = UISheetPresentationController.Detent.custom { _ in 180 } // 스몰 크기 설정
+            let smallDetent = UISheetPresentationController.Detent.custom { _ in 100 } // 스몰 크기 설정
             sheet.detents = [smallDetent, .medium(), .large()]
             sheet.prefersGrabberVisible = true
             sheet.largestUndimmedDetentIdentifier = .medium
@@ -191,7 +191,7 @@ class MujiMainViewController: UIViewController, UITabBarDelegate, CLLocationMana
 
     func changeSheetToSmallSize() {
         if let sheet = bottomSheetVC?.sheetPresentationController {
-            let smallDetent = UISheetPresentationController.Detent.custom { _ in 180 }
+            let smallDetent = UISheetPresentationController.Detent.custom { _ in 100 }
             DispatchQueue.main.async {
                 sheet.animateChanges {
                     sheet.detents = [smallDetent, .medium(), .large()]
