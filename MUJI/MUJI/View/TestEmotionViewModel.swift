@@ -11,7 +11,7 @@ struct EmotionEntry {
     let timestamp: Date
 }
 
-class EmotionViewModel: NSObject, CLLocationManagerDelegate {
+class TestEmotionViewModel: NSObject, CLLocationManagerDelegate {
     var emotionEntries: [EmotionEntry] = [] // 저장된 감정 데이터를 담을 배열
     private let locationManager = CLLocationManager()
     private var pendingSaveRequest: (emoji: String, emotion: String)?
