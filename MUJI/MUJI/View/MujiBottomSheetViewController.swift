@@ -26,7 +26,7 @@ class MujiBottomSheetViewController: UIViewController {
         case 1:
             currentViewController = SampleMusicRecommendationViewController()//음악추천
         case 2:
-            currentViewController = SampleProfileViewController()//프로필뷰
+            currentViewController = MainTabBarController()//프로필뷰
         default:
             return
         }
@@ -46,3 +46,4 @@ class MujiBottomSheetViewController: UIViewController {
         }
     }
 }
+
