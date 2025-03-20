@@ -20,9 +20,8 @@ class AppleMusicApiSendViewModel {
         )
     }
     
-// MARK: Apple Music API에 데이터 요처
+// MARK: Apple Music API에 데이터 요청
     func sendToAppleMusicApi(appleMusicData: AppleMusicApiSendModel) {
-        // 로컬 변수에 저장 (UI 표시용)
         self.artistName = appleMusicData.artistName
         self.title = appleMusicData.title
         
