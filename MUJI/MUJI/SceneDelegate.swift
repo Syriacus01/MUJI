@@ -18,7 +18,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         // UIWindow 객체 생성 후 유효성 검사를 한 windowScene를 사용해서 초기화
         
-        let vc = ViewController()
+        let vc = MujiMainViewController()//메인뷰 변경
         window.rootViewController = vc
         self.window = window
         // 하나 이상의 뷰를 포함시키기 위해 프로젝트 첫 세팅 시 ViewController를 rootViewController에 담음
