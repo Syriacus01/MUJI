@@ -73,7 +73,7 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
         name = userDefaults.getName()
         username = userDefaults.getUsername()
         bio = userDefaults.getBio()
-        location = userDefaults.getLocation()
+        //location = userDefaults.getLocation()
         age = userDefaults.getAge()
         genres = userDefaults.getGenres()
         profileImage = userDefaults.getProfileImage()

@@ -37,7 +37,7 @@ class UserDefaultsManager {
     private var initialDefaultName = "김도연"
     private var initialDefaultUsername = "@doyeon_kim"
     private var initialDefaultBio = "음악과 함께하는 일상 🎵"
-    private var initialDefaultLocation = "서울, 대한민국"
+    //private var initialDefaultLocation = "서울, 대한민국"
     private var initialDefaultGenres = ["K-POP", "R&B", "팝"]
     private var initialDefaultAge = "20세"
     
@@ -48,7 +48,7 @@ class UserDefaultsManager {
             saveDefaultName(initialDefaultName)
             saveDefaultUsername(initialDefaultUsername)
             saveDefaultBio(initialDefaultBio)
-            saveDefaultLocation(initialDefaultLocation)
+            //saveDefaultLocation(initialDefaultLocation)
             saveDefaultGenres(initialDefaultGenres)
             saveDefaultAge(initialDefaultAge)
             
@@ -132,17 +132,17 @@ class UserDefaultsManager {
         defaults.set(location, forKey: Keys.location)
     }
     
-    func getLocation() -> String {
+    /*func getLocation() -> String {
         return defaults.string(forKey: Keys.location) ?? getDefaultLocation()
-    }
+    }*/
     
     func saveDefaultLocation(_ location: String) {
         defaults.set(location, forKey: Keys.defaultLocation)
     }
     
-    func getDefaultLocation() -> String {
+    /*func getDefaultLocation() -> String {
         return defaults.string(forKey: Keys.defaultLocation) ?? initialDefaultLocation
-    }
+    }*/
     
     // MARK: - 나이 관리
     func saveAge(_ age: String) {
