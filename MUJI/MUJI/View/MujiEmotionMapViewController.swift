@@ -15,7 +15,7 @@ class MujiEmotionMapViewController: UIViewController {
     
     private var sheetController: UISheetPresentationController?
     private var isSmallDetent = true
-    private let emotionViewModel = EmotionViewModel()
+    private let emotionViewModel = TestEmotionViewModel()
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "감정지도"
