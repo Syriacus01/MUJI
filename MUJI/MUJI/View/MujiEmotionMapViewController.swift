@@ -51,7 +51,7 @@ class MujiEmotionMapViewController: UIViewController {
     
     private let saveButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("저장", for: .normal)
+        button.setTitle("검색", for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
         button.backgroundColor = .systemBlue
         button.tintColor = .white
@@ -160,7 +160,11 @@ class MujiEmotionMapViewController: UIViewController {
                    let rootVC = window.rootViewController as? MujiMainViewController {
                     
                     rootVC.addEmojiAnnotation(emoji: emoji, emotion: emotionText)
-                    rootVC.changeSheetToSmallSize()
+                    rootVC.changeSheetToLargeSize()
+//                    Task {
+//                                let recommendedSongs = await SearchChatGPT.shared.search(input: "비오는 날")
+//                                print("추천된 노래:", recommendedSongs)
+//                            }
         }
     }
 }

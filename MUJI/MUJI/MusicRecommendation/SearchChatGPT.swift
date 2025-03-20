@@ -9,7 +9,8 @@ import Dispatch
 import ChatGPTSwift
 
 class SearchChatGPT {
-    
+    static let shared = SearchChatGPT() // 싱글톤 인스턴스
+        private init() { } 
     let chatGPTAPIKey = ""
     
     func search(input: String) async -> String {

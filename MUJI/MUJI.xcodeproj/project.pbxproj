@@ -6,8 +6,13 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		5E2F8D862D8C647C00333626 /* ChatGPTSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 5E2F8D852D8C647C00333626 /* ChatGPTSwift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		55A6B9992D854F3B0042DF74 /* MUJI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MUJI.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5E2F8D882D8C64B500333626 /* ChatGPTSwift */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ChatGPTSwift; path = "/Users/uihyun/Library/Developer/Xcode/DerivedData/MUJI-bybjspeqsoovuvhjthlivvykfqen/SourcePackages/checkouts/ChatGPTSwift"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -51,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5E2F8D862D8C647C00333626 /* ChatGPTSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +71,7 @@
 				55DA57BB2D880A7700BCE73C /* ViewModels */,
 				550473432D8905650046417D /* Models */,
 				550473852D890FA30046417D /* CoreData */,
+				5E2F8D872D8C64B500333626 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -74,6 +81,14 @@
 				55A6B9992D854F3B0042DF74 /* MUJI.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		5E2F8D872D8C64B500333626 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5E2F8D882D8C64B500333626 /* ChatGPTSwift */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -99,6 +114,7 @@
 			);
 			name = MUJI;
 			packageProductDependencies = (
+				5E2F8D852D8C647C00333626 /* ChatGPTSwift */,
 			);
 			productName = MUJI;
 			productReference = 55A6B9992D854F3B0042DF74 /* MUJI.app */;
@@ -128,6 +144,9 @@
 			);
 			mainGroup = 55A6B9902D854F3B0042DF74;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				5E2F8D842D8C647C00333626 /* XCRemoteSwiftPackageReference "ChatGPTSwift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 55A6B99A2D854F3B0042DF74 /* Products */;
 			projectDirPath = "";
@@ -352,6 +371,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		5E2F8D842D8C647C00333626 /* XCRemoteSwiftPackageReference "ChatGPTSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/alfianlosari/ChatGPTSwift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.4.4;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		5E2F8D852D8C647C00333626 /* ChatGPTSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5E2F8D842D8C647C00333626 /* XCRemoteSwiftPackageReference "ChatGPTSwift" */;
+			productName = ChatGPTSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 55A6B9912D854F3B0042DF74 /* Project object */;
 }
