@@ -87,7 +87,7 @@ class MujiMainViewController: UIViewController, UITabBarDelegate, CLLocationMana
         tabBarView.delegate = self
 
         let emotionItem = UITabBarItem(title: "감정지도", image: UIImage(systemName: "map"), tag: 0)
-        let musicItem = UITabBarItem(title: "음악추천", image: UIImage(systemName: "music.note"), tag: 1)
+        let musicItem = UITabBarItem(title: "음악", image: UIImage(systemName: "music.note"), tag: 1)
         let profileItem = UITabBarItem(title: "프로필", image: UIImage(systemName: "person.circle"), tag: 2)
 
         tabBarView.items = [emotionItem, musicItem, profileItem]

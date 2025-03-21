@@ -268,7 +268,7 @@ class UserDefaultsManager {
         return DataManager.shared.parseActivityItems(from: jsonString)
     }
     
-    func getSongs() -> [Song]? {
+    func getSongs() -> [UserSong]? {
         let jsonString = getSongsJson()
         return DataManager.shared.parseSongs(from: jsonString)
     }

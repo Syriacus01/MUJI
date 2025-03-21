@@ -15,7 +15,7 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
     private let titleLabel = UILabel()
     
     // 노래 데이터 - 빈 배열로 초기화하고 나중에 로드
-    private var songs: [Song] = []
+    private var songs: [UserSong] = []
     
     // MARK: - 라이프사이클 메서드
     override func viewDidLoad() {
@@ -33,12 +33,12 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
             songs = loadedSongs
         } else {
             // 기본 데이터 설정 (UserDefaults에 데이터가 없는 경우)
-            let defaultSongs: [Song] = [
-                Song(id: "1", title: "봄날", artist: "BTS", emotion: "행복"),
-                Song(id: "2", title: "눈의 꽃", artist: "박효신", emotion: "평온"),
-                Song(id: "3", title: "FAKE LOVE", artist: "BTS", emotion: "슬픔"),
-                Song(id: "4", title: "좋은 날", artist: "아이유", emotion: "행복"),
-                Song(id: "5", title: "에잇", artist: "아이유", emotion: "슬픔")
+            let defaultSongs: [UserSong] = [
+                UserSong(id: "1", title: "봄날", artist: "BTS", emotion: "행복"),
+                UserSong(id: "2", title: "눈의 꽃", artist: "박효신", emotion: "평온"),
+                UserSong(id: "3", title: "FAKE LOVE", artist: "BTS", emotion: "슬픔"),
+                UserSong(id: "4", title: "좋은 날", artist: "아이유", emotion: "행복"),
+                UserSong(id: "5", title: "에잇", artist: "아이유", emotion: "슬픔")
             ]
             songs = defaultSongs
             
@@ -133,7 +133,7 @@ class PlaylistViewController: UIViewController, UITableViewDelegate, UITableView
         let nextId = (songs.compactMap { Int($0.id) }.max() ?? 0) + 1
         
         // 새 노래 생성
-        let newSong = Song(id: String(nextId), title: title, artist: artist, emotion: emotion)
+        let newSong = UserSong(id: String(nextId), title: title, artist: artist, emotion: emotion)
         songs.append(newSong)
         
         // JSON으로 변환하여 저장
