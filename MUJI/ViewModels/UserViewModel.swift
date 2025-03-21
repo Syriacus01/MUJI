@@ -111,30 +111,20 @@ class UserViewModel: ObservableObject {
             userEntity.age = Int64(age)
         }
         if let genres = userDict["genres"] as? [String] {
-            userEntity.genres = genres
+            userEntity.musicGenre = genres
         }
-        
-        if let imageData = userDict["imageData"] as? Data {
-            userEntity.imageData = imageData
+        if let imageData = userDict["profileImageData"] as? Data {
+            userEntity.profileImage = imageData
         }
-        
         do {
-            try context.save(
+            try context.save()
             print("새로운 UserEntity를 생성하여 저장하였습니다.")
         } catch {
             print("Core Data 저장 실패")
         }
+        UserDefaults.standard.removeObject(forKey: "user")
+        print("UserDefaults에서 'user' 키의 값을 제거하였습니다.")
         
-        userDefaults.removeObject(forKey: "user")
-            print("UserDefaults에서 user 키의 값을 제거하였습니다.")
-            fetchUser()
+        fetchUser()
     }
-        
-        
-        
-        
-        
-        
-        
-        
 }
