@@ -52,7 +52,7 @@ class UserViewModel: ObservableObject {
             let results = try context.fetch(fetchRequest)
             
             if let entity = results.first { // 사용자 정보가 있으면 첫 번째 사용자 정보를 가져와서 수정
-                // 수정된 값을 업데이트 
+                // 수정된 값을 업데이트
                 entity.name = name
                 entity.age = Int64(age)
                 entity.musicGenre = musicGenre
@@ -93,4 +93,48 @@ class UserViewModel: ObservableObject {
         }
         onUpdate?() // UI update
     }
+    
+// MARK: UserDefaults -> Core Data로 변환
+    func userDefaultsToCoreData() {
+        guard let userDefaults = UserDefaults.standard.dictionary(forKey: "user") else {
+            print("키 or 값이 저장되어 있지 않습니다.")
+            return
+        }
+        let context = CoreDataManager.shared.mainContext
+        
+        let userEntity = UserEntity(context: context)
+        
+        if let name = userDict["name"] as? String {
+            userEntity.name = name
+        }
+        if let age = userDict["age"] as? Int {
+            userEntity.age = Int64(age)
+        }
+        if let genres = userDict["genres"] as? [String] {
+            userEntity.genres = genres
+        }
+        
+        if let imageData = userDict["imageData"] as? Data {
+            userEntity.imageData = imageData
+        }
+        
+        do {
+            try context.save(
+            print("새로운 UserEntity를 생성하여 저장하였습니다.")
+        } catch {
+            print("Core Data 저장 실패")
+        }
+        
+        userDefaults.removeObject(forKey: "user")
+            print("UserDefaults에서 user 키의 값을 제거하였습니다.")
+            fetchUser()
+    }
+        
+        
+        
+        
+        
+        
+        
+        
 }
