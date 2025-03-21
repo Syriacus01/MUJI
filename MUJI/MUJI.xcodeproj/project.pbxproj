@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		9AFE42932D8CEB5600E2C5AE /* ChatGPTSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 9AFE42922D8CEB5600E2C5AE /* ChatGPTSwift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		55A6B9992D854F3B0042DF74 /* MUJI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MUJI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -51,6 +55,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9AFE42932D8CEB5600E2C5AE /* ChatGPTSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -99,6 +104,7 @@
 			);
 			name = MUJI;
 			packageProductDependencies = (
+				9AFE42922D8CEB5600E2C5AE /* ChatGPTSwift */,
 			);
 			productName = MUJI;
 			productReference = 55A6B9992D854F3B0042DF74 /* MUJI.app */;
@@ -128,6 +134,9 @@
 			);
 			mainGroup = 55A6B9902D854F3B0042DF74;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				9AFE42912D8CEB5600E2C5AE /* XCRemoteSwiftPackageReference "ChatGPTSwift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 55A6B99A2D854F3B0042DF74 /* Products */;
 			projectDirPath = "";
@@ -166,6 +175,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 9XFP6N5QCS;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MUJI/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -192,6 +202,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 9XFP6N5QCS;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MUJI/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -352,6 +363,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		9AFE42912D8CEB5600E2C5AE /* XCRemoteSwiftPackageReference "ChatGPTSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/alfianlosari/ChatGPTSwift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.4.4;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		9AFE42922D8CEB5600E2C5AE /* ChatGPTSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9AFE42912D8CEB5600E2C5AE /* XCRemoteSwiftPackageReference "ChatGPTSwift" */;
+			productName = ChatGPTSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 55A6B9912D854F3B0042DF74 /* Project object */;
 }
