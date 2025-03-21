@@ -17,7 +17,7 @@ extension Notification.Name {
 }
 
 /// 메인 ViewController: Apple Music 재생 & 앨범 커버 반투명 배경 + 슬라이더 UI
-class ViewController: UIViewController {
+class PlayViewController: UIViewController, UISearchBarDelegate {
     
     // MARK: - MusicKit 관련 속성
     

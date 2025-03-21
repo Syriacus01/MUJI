@@ -39,7 +39,7 @@ struct ActivityItem: Codable {
 }
 
 // MARK: - 플레이리스트 노래 모델
-struct Song: Codable {
+struct UserSong: Codable {
     let id: String
     let title: String
     let artist: String
@@ -77,11 +77,11 @@ class DataManager {
     }
     
     // JSON 문자열에서 노래 데이터 파싱
-    func parseSongs(from jsonString: String) -> [Song]? {
+    func parseSongs(from jsonString: String) -> [UserSong]? {
         guard let data = jsonString.data(using: .utf8) else { return nil }
         
         do {
-            let songs = try JSONDecoder().decode([Song].self, from: data)
+            let songs = try JSONDecoder().decode([UserSong].self, from: data)
             return songs
         } catch {
             print("노래 데이터 파싱 오류: \(error)")
