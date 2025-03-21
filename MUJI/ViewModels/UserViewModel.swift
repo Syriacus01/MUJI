@@ -96,7 +96,7 @@ class UserViewModel: ObservableObject {
     
 // MARK: UserDefaults -> Core Data로 변환
     func userDefaultsToCoreData() {
-        guard let userDefaults = UserDefaults.standard.dictionary(forKey: "user") else {
+        guard let userDict = UserDefaults.standard.dictionary(forKey: "user") else {
             print("키 or 값이 저장되어 있지 않습니다.")
             return
         }
@@ -111,7 +111,7 @@ class UserViewModel: ObservableObject {
             userEntity.age = Int64(age)
         }
         if let genres = userDict["genres"] as? [String] {
-            userEntity.musicGenre = genres
+            userEntity.musicGenre = genres.joined(separator: ", ") ?? ""
         }
         if let imageData = userDict["profileImageData"] as? Data {
             userEntity.profileImage = imageData
