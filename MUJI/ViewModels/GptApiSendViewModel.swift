@@ -6,7 +6,14 @@ import CoreLocation
 
 // MARK: 사용자 정보 + 맵 뷰에 찍은 핀 데이터를 GPT API에게 전송하기 위한 로직
 class GptApiSendViewModel: NSObject, CLLocationManagerDelegate {
-    var onUpdate: (() -> Void)? // 뷰에서 UI 업데이트 하실 때 onUpdate 가져가서 실행해주시면 돼요
+    
+    static let shared = GptApiSendViewModel()
+    private override init() {
+        super.init()
+        locationManager.delegate = self
+    }
+    
+    var onUpdate: (() -> Void)?
     
     // API에 보내야 하는 사용자 정보
     var userAge: Int = 0
@@ -16,12 +23,7 @@ class GptApiSendViewModel: NSObject, CLLocationManagerDelegate {
     var userLongitude: Double?
 
     let locationManager = CLLocationManager()
-    
-    override init() {
-        super.init()
-        locationManager.delegate = self
-    }
-    
+
 // MARK: 사용자의 현재 위치 요청
     func requestLocation() {
         locationManager.requestLocation() // 사용자의 현재 위치를 가져옴

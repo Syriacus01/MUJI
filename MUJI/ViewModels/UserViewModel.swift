@@ -8,7 +8,10 @@ import CoreData
 // MARK: Core Data에서 사용자 정보를 불러오고 수정, 삭제하는 로직
 class UserViewModel: ObservableObject {
     
-    var onUpdate: (() -> Void)? // 뷰에서 UI 업데이트 하실 때 onUpdate 가져가서 실행해주시면 돼요
+    static let shared = UserViewModel()
+    private init() {}
+    
+    var onUpdate: (() -> Void)?
     
     @Published var user: UserModel? // 현재 사용자 정보 (없을 수도 있어서 옵셔널처리)
     

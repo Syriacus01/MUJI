@@ -7,6 +7,9 @@ import CoreData
 // MARK: GPT API -> Apple Music API로 전송하는 로직
 class AppleMusicApiSendViewModel {
     
+    static let shared = AppleMusicApiSendViewModel()
+    private init() {}
+    
     var onUpdate: (() -> Void)? // 뷰에서 UI 업데이트 하실 때 onUpdate 가져가서 실행해주시면 돼요
 
     var artistName: String = ""
