@@ -6,8 +6,11 @@ import CoreData
 
 // MARK: GPT API가 추천해준 노래
 class GptRecommendViewModel {
-    var onUpdate: (() -> Void)? // 뷰에서 UI 업데이트 하실 때 onUpdate 가져가서 실행해주시면 돼요
-
+    
+    static let shared = GptRecommendViewModel()
+    private init() {}
+    
+    var onUpdate: (() -> Void)?
     var recommendList: [GptRecommendModel] = [] // GPT API가 추천해준 노래 목록
     
 // MARK: GPT API 추천해준 노래 리스트 가져오기

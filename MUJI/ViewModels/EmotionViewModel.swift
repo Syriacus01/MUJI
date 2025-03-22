@@ -7,8 +7,10 @@ import CoreData
 // MARK: 사용자가 맵 뷰에 남긴 감정 이모지 데이터 관리 로직
 class EmotionViewModel {
 
-    var onUpdate: (() -> Void)? // 뷰에서 UI 업데이트 하실 때 onUpdate 가져가서 실행해주시면 돼요
-
+    static let shared = EmotionViewModel()
+    private init() {}
+    
+    var onUpdate: (() -> Void)?
     var emotions: [EmotionModel] = []
     
 // MARK: 사용자가 입력한 감정 이모지 데이터 불러오기

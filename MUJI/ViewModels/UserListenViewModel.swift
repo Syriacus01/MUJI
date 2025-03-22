@@ -7,7 +7,10 @@ import CoreData
 // MARK: 사용자가 재생한 노래 데이터를 불러오고 수정, 삭제하는 로직
 class UserListenViewModel {
     
-    var onUpdate: (() -> Void)? // 뷰에서 UI 업데이트 하실 때 onUpdate 가져가서 실행해주시면 돼요
+    static let shared = UserListenViewModel()
+    private init() {}
+    
+    var onUpdate: (() -> Void)?
     var listeningList: [UserListenModel] = [] // Core Data에서 불러온 데이터를 배열로 저장
     
 // MARK: 사용자가 재생한 노래 불러오기
