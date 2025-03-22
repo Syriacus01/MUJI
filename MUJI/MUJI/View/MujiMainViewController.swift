@@ -200,6 +200,17 @@ class MujiMainViewController: UIViewController, UITabBarDelegate, CLLocationMana
             }
         }
     }
+    func changeSheetToLargeSize() {
+        if let sheet = bottomSheetVC?.sheetPresentationController {
+            DispatchQueue.main.async {
+                sheet.animateChanges {
+                    sheet.detents = [.medium(), .large()]
+                    sheet.selectedDetentIdentifier = .large
+                }
+            }
+        }
+    }
+
 
     // 탭 클릭 감지 및 화면 변경
     func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {

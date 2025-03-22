@@ -10,7 +10,7 @@ import ChatGPTSwift
 import Foundation
 
 class SearchChatGPT {
-    
+    static let shared = SearchChatGPT()
     let chatGPTAPIKey: String = {
         guard let key = ProcessInfo.processInfo.environment["CHATGPT_API_KEY"] else {
             fatalError("API_KEY가 없음.")
