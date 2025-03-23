@@ -34,7 +34,7 @@ final class EmotionRecommendationManager {
                     weather: weatherInfo,
                     emotion: comment,
                     age: user?.age ?? 0,
-                    genre: user?.musicGenre ?? "pop"
+                    genre: user?.musicGenre.joined(separator: ", ") ?? "pop"
                 )
 
                 let lines = result.split(separator: "\n").map { String($0) }

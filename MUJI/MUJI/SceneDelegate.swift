@@ -26,6 +26,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window.makeKeyAndVisible()
         // makeKeyAndVisible 메서드 호출하여 window를 화면에 표시하고 key window로 지정. (key window는 사용자 입력을 받는 window)
+        EmotionViewModel.shared.fetchEmotions() // 앱 실행 시 Core Data에 저장된 핀 데이터를 불러옴
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

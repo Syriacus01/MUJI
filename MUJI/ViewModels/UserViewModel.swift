@@ -24,18 +24,24 @@ class UserViewModel: ObservableObject {
             let results = try context.fetch(fetchRequest) // 사용자 정보가 있는지 UserEntity를 가져오고
             
             if let entity = results.first { // 저장된 데이터가 있으면 UserModel로 변환
-                user = UserModel(
-                    name: entity.name ?? "", // 사용자 이름 (기본값은 "")
-                    age: Int(entity.age), // 사용자 나이 (Int로 변환)
-                    profileImage: {
-                        if let data = entity.profileImage {
-                            return UIImage(data: data) ?? UIImage() // 사용자 프로필 이미지 변환
-                        } else {
-                            return UIImage()
-                        }
-                    }(),
-                    musicGenre: entity.musicGenre ?? "" // 사용자가 선택한 음악 장르 (기본값은 "")
+                let name = entity.name ?? ""
+                let age = Int(entity.age)
+                let image: UIImage = {
+                    if let data = entity.profileImage {
+                        return UIImage(data: data) ?? UIImage()
+                    } else {
+                        return UIImage()
+                    }
+                }()
+                let genres = (entity.musicGenre ?? "").components(separatedBy: ",")
+                
+                user = UserModel(name: name,
+                                 age: age,
+                                 profileImage: image,
+                                 musicGenre: genres,
+                                 userInfo: true
                 )
+                updateUser(name: name, age: age, profileImage: image, musicGenre: genres.joined())
             } else { // 사용자 정보 데이터가 없으면
                 user = nil
             }
@@ -97,6 +103,11 @@ class UserViewModel: ObservableObject {
         onUpdate?() // UI update
     }
     
+// MARK: 음악 장르 배열 리턴 (문자열로 리턴되게)
+    func getGenreArray() -> String {
+        return user?.musicGenre.joined(separator: ",") ?? ""
+    }
+    
 // MARK: UserDefaults -> Core Data로 변환
     func userDefaultsToCoreData() {
         guard let userDict = UserDefaults.standard.dictionary(forKey: "user") else {
@@ -114,7 +125,7 @@ class UserViewModel: ObservableObject {
             userEntity.age = Int64(age)
         }
         if let genres = userDict["genres"] as? [String] {
-            userEntity.musicGenre = genres.joined(separator: ", ") ?? ""
+            userEntity.musicGenre = genres.joined(separator: ", ")
         }
         if let imageData = userDict["profileImageData"] as? Data {
             userEntity.profileImage = imageData

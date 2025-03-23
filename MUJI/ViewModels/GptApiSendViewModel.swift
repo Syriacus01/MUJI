@@ -44,7 +44,7 @@ class GptApiSendViewModel: NSObject, CLLocationManagerDelegate {
 // MARK: GPT API로 데이터 보낼 수 있게
     func prepareGptApiData(user: UserModel, address: String) -> GptApiSendModel {
         self.userAge = user.age // 사용자의 나이
-        self.userMusicGenre = user.musicGenre // 사용자가 선택한 음악 장르
+        self.userMusicGenre = user.musicGenre.joined(separator: ", ") // 사용자가 선택한 음악 장르
         self.userAddress = address // 사용자의 현재 주소
 
         return GptApiSendModel(

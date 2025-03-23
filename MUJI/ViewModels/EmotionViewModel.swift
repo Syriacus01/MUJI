@@ -17,11 +17,11 @@ class EmotionViewModel {
 // MARK: 사용자가 입력한 감정 이모지 데이터 불러오기
     func fetchEmotions() {
         let context = CoreDataManager.shared.mainContext
-  
+                    
         let fetchRequest: NSFetchRequest<EmotionEntity> = EmotionEntity.fetchRequest()
         do {
             let results = try context.fetch(fetchRequest) // 사용자가 입력한 감정 이모지 불러오기
-
+            
             emotions = results.map { entity in
                 let dateValue = entity.date ?? Date()
                 
@@ -47,7 +47,7 @@ class EmotionViewModel {
         let newEmotion = EmotionEntity(context: context)
         
         newEmotion.emotion = emotion
-        newEmotion.comment = comment       
+        newEmotion.comment = comment
         newEmotion.latitude = latitude
         newEmotion.longitude = longitude
         newEmotion.date = Date()
@@ -69,12 +69,17 @@ class EmotionViewModel {
             self.fetchEmotions()
         }
     }
-// MARK: 사용자가 기록한 감정 이모지 통계
-    func getEmotionStatistics() -> [String: Int] {
-        var stats: [String: Int] = [:]
-        for emotionModel in emotions {
-            stats[emotionModel.emotion, default: 0] += 1
+    // MARK: 사용자가 기록한 감정 이모지 통계 (퍼센트)
+    func getEmotionPercentage() -> [String: Double] {
+        var emotionCount: [String: Int] = [:]
+        
+        for emotion in emotions {
+            emotionCount[emotion.emotion, default: 0] += 1
         }
-        return stats
+        var percentage: [String: Double] = [:]
+        for (emotion, count) in emotionCount {
+            percentage[emotion] = Double(count) * 20
+        }
+        return percentage
     }
 }

@@ -71,7 +71,7 @@ class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, 
     private func loadProfileData() {
         let userDefaults = UserDefaultsManager.shared
         name = userDefaults.getName()
-        username = userDefaults.getUsername()
+        //username = userDefaults.getUsername()
         bio = userDefaults.getBio()
         //location = userDefaults.getLocation()
         age = userDefaults.getAge()

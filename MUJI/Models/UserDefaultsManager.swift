@@ -34,19 +34,19 @@ class UserDefaultsManager {
     private let defaults = UserDefaults.standard
     
     // 초기 기본값
-    private var initialDefaultName = "김도연"
-    private var initialDefaultUsername = "@doyeon_kim"
-    private var initialDefaultBio = "음악과 함께하는 일상 🎵"
+    private var initialDefaultName = "이름"
+    //private var initialDefaultUsername = "@doyeon_kim"
+    private var initialDefaultBio = "메시지를 입력해주세요"
     //private var initialDefaultLocation = "서울, 대한민국"
-    private var initialDefaultGenres = ["K-POP", "R&B", "팝"]
-    private var initialDefaultAge = "20세"
+    private var initialDefaultGenres = ["팝ㅋ"]
+    private var initialDefaultAge = "나이"
     
     // 초기화 메서드
     private init() {
         // 앱 최초 실행 시 기본값 저장
         if !defaults.bool(forKey: "defaults_initialized") {
             saveDefaultName(initialDefaultName)
-            saveDefaultUsername(initialDefaultUsername)
+            //saveDefaultUsername(initialDefaultUsername)
             saveDefaultBio(initialDefaultBio)
             //saveDefaultLocation(initialDefaultLocation)
             saveDefaultGenres(initialDefaultGenres)
@@ -97,18 +97,18 @@ class UserDefaultsManager {
     func saveUsername(_ username: String) {
         defaults.set(username, forKey: Keys.username)
     }
-    
+    /*
     func getUsername() -> String {
         return defaults.string(forKey: Keys.username) ?? getDefaultUsername()
-    }
+    }*/
     
     func saveDefaultUsername(_ username: String) {
         defaults.set(username, forKey: Keys.defaultUsername)
     }
     
-    func getDefaultUsername() -> String {
+    /*func getDefaultUsername() -> String {
         return defaults.string(forKey: Keys.defaultUsername) ?? initialDefaultUsername
-    }
+    }*/
     
     // MARK: - 소개 관리
     func saveBio(_ bio: String) {

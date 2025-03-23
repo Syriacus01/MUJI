@@ -26,7 +26,7 @@ class EmotionInputView: UIView {
         return textField
     }()
 
-    private let emojiOptions: [String] = ["😀", "😢", "😡", "😱", "😍"]
+    private let emojiOptions: [String] = ["😀", "😡", "😶", "😭", "🤒"]
 
     private let emojiStackView: UIStackView = {
         let stackView = UIStackView()
@@ -37,7 +37,7 @@ class EmotionInputView: UIView {
         return stackView
     }()
 
-    var selectedEmoji: String = "🙂"
+    var selectedEmoji: String = "😀"
 
     // 콜백 클로저 (컨트롤러에서 바인딩 가능)
     var onEmojiSelected: ((String) -> Void)?
