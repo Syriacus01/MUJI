@@ -24,14 +24,6 @@ class MujiEmotionMapViewController: UIViewController, CLLocationManagerDelegate,
 
     private var selectedEmoji: String = "🙂"
 
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        currentLocation = locations.last?.coordinate
-    }
-
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print("위치 정보 가져오기 실패: \(error)")
-    }
-
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "감정지도"
@@ -40,30 +32,7 @@ class MujiEmotionMapViewController: UIViewController, CLLocationManagerDelegate,
         return label
     }()
 
-    private let emotionInputView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        view.layer.cornerRadius = 10
-        view.layer.shadowOpacity = 0.2
-        view.layer.shadowOffset = CGSize(width: 2, height: 2)
-        view.layer.shadowRadius = 4
-        return view
-    }()
-
-    private let emotionTextField: UITextField = {
-        let textField = UITextField()
-        textField.placeholder = "감정을 입력하세요"
-        textField.borderStyle = .roundedRect
-        return textField
-    }()
-
-    private let emojiLabel: UILabel = {
-        let label = UILabel()
-        label.text = "🙂"
-        label.font = UIFont.systemFont(ofSize: 50)
-        label.textAlignment = .center
-        return label
-    }()
+    private let emotionInputView = EmotionInputView()
 
     private let saveButton: UIButton = {
         let button = UIButton(type: .system)
@@ -73,17 +42,6 @@ class MujiEmotionMapViewController: UIViewController, CLLocationManagerDelegate,
         button.tintColor = .white
         button.layer.cornerRadius = 10
         return button
-    }()
-
-    private let emojiOptions: [String] = ["😀", "😢", "😡", "😱", "😍"]
-
-    private let emojiStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .horizontal
-        stackView.alignment = .center
-        stackView.distribution = .equalSpacing
-        stackView.spacing = 10
-        return stackView
     }()
 
     private let loadingIndicator: UIActivityIndicatorView = {
@@ -120,13 +78,16 @@ class MujiEmotionMapViewController: UIViewController, CLLocationManagerDelegate,
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
         locationManager.requestLocation()
-        emotionTextField.delegate = self
+        emotionInputView.emotionTextField.delegate = self
 
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-        view.addGestureRecognizer(tapGesture)
+        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard)))
 
         setupUI()
         UserViewModel.shared.fetchUser()
+
+        emotionInputView.onEmojiSelected = { [weak self] emoji in
+            self?.selectedEmoji = emoji
+        }
 
         if let sheet = self.presentationController as? UISheetPresentationController {
             self.sheetController = sheet
@@ -148,19 +109,6 @@ class MujiEmotionMapViewController: UIViewController, CLLocationManagerDelegate,
             view.addSubview($0)
         }
 
-        [emojiLabel, emotionTextField, emojiStackView].forEach {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-            emotionInputView.addSubview($0)
-        }
-
-        for emoji in emojiOptions {
-            let button = UIButton(type: .system)
-            button.setTitle(emoji, for: .normal)
-            button.titleLabel?.font = UIFont.systemFont(ofSize: 30)
-            button.addTarget(self, action: #selector(emojiSelected(_:)), for: .touchUpInside)
-            emojiStackView.addArrangedSubview(button)
-        }
-
         NSLayoutConstraint.activate([
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
@@ -169,19 +117,6 @@ class MujiEmotionMapViewController: UIViewController, CLLocationManagerDelegate,
             emotionInputView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             emotionInputView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
             emotionInputView.heightAnchor.constraint(equalToConstant: 180),
-
-            emojiLabel.centerXAnchor.constraint(equalTo: emotionInputView.centerXAnchor),
-            emojiLabel.topAnchor.constraint(equalTo: emotionInputView.topAnchor, constant: 10),
-
-            emojiStackView.leadingAnchor.constraint(equalTo: emotionInputView.leadingAnchor, constant: 10),
-            emojiStackView.trailingAnchor.constraint(equalTo: emotionInputView.trailingAnchor, constant: -10),
-            emojiStackView.topAnchor.constraint(equalTo: emojiLabel.bottomAnchor, constant: 10),
-            emojiStackView.heightAnchor.constraint(equalToConstant: 40),
-
-            emotionTextField.leadingAnchor.constraint(equalTo: emotionInputView.leadingAnchor, constant: 10),
-            emotionTextField.trailingAnchor.constraint(equalTo: emotionInputView.trailingAnchor, constant: -10),
-            emotionTextField.topAnchor.constraint(equalTo: emojiStackView.bottomAnchor, constant: 10),
-            emotionTextField.heightAnchor.constraint(equalToConstant: 40),
 
             saveButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             saveButton.topAnchor.constraint(equalTo: emotionInputView.bottomAnchor, constant: 20),
@@ -204,15 +139,11 @@ class MujiEmotionMapViewController: UIViewController, CLLocationManagerDelegate,
         saveButton.addTarget(self, action: #selector(saveEmotion), for: .touchUpInside)
     }
 
-    @objc private func emojiSelected(_ sender: UIButton) {
-        guard let emoji = sender.titleLabel?.text else { return }
-        selectedEmoji = emoji
-        emojiLabel.text = emoji
-    }
-
     @objc private func saveEmotion() {
+        view.endEditing(true)
+
         let emoji = selectedEmoji
-        let emotionText = emotionTextField.text ?? ""
+        let emotionText = emotionInputView.emotionTextField.text ?? ""
 
         guard !emotionText.isEmpty else {
             showToast(message: "감정을 입력해주세요 ")
@@ -247,63 +178,56 @@ class MujiEmotionMapViewController: UIViewController, CLLocationManagerDelegate,
         recommendationStackView.isHidden = true
         recommendationStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
 
-        FetchWeather.shared.fetchWeather(lat: "\(location.latitude)", lon: "\(location.longitude)") { weatherInfo in
-            UserViewModel.shared.fetchUser()
-            Task {
-                let result = await SearchChatGPT.shared.search(
-                    location: latestEmotion.address,
-                    weather: weatherInfo,
-                    emotion: latestEmotion.comment,
-                    age: UserViewModel.shared.user?.age ?? 0,
-                    genre: UserViewModel.shared.user?.musicGenre ?? "pop"
-                )
+        EmotionRecommendationManager.shared.getRecommendation(
+            emotion: emoji,
+            comment: emotionText,
+            location: location,
+            user: UserViewModel.shared.user
+        ) { [weak self] (lines: [String]) in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                self.loadingIndicator.stopAnimating()
 
-                let lines = result.split(separator: "\n").map { String($0) }
+                if lines.isEmpty {
+                    let label = UILabel()
+                    label.text = "추천 결과가 없습니다."
+                    label.font = UIFont.systemFont(ofSize: 16)
+                    self.recommendationStackView.addArrangedSubview(label)
+                } else {
+                    for i in stride(from: 0, to: lines.count, by: 2) {
+                        let title = lines[safe: i] ?? ""
+                        let reason = lines[safe: i + 1] ?? ""
 
-                DispatchQueue.main.async {
-                    self.loadingIndicator.stopAnimating()
+                        let container = UIStackView()
+                        container.axis = .vertical
+                        container.spacing = 4
 
-                    if lines.isEmpty {
-                        let label = UILabel()
-                        label.text = "추천 결과가 없습니다."
-                        label.font = UIFont.systemFont(ofSize: 16)
-                        self.recommendationStackView.addArrangedSubview(label)
-                    } else {
-                        for i in stride(from: 0, to: lines.count, by: 2) {
-                            let title = lines[safe: i] ?? ""
-                            let reason = lines[safe: i + 1] ?? ""
+                        let titleLabel = UILabel()
+                        let cleanedTitle = title.replacingOccurrences(of: #"^\d+\.\s*"#, with: "", options: .regularExpression)
+                        titleLabel.text = "\u{1F3B5} " + cleanedTitle
+                        titleLabel.font = UIFont.systemFont(ofSize: 18)
+                        titleLabel.isUserInteractionEnabled = true
+                        let tap = UITapGestureRecognizer(target: self, action: #selector(self.copySongText(_:)))
+                        titleLabel.addGestureRecognizer(tap)
 
-                            let container = UIStackView()
-                            container.axis = .vertical
-                            container.spacing = 4
+                        let reasonLabel = UILabel()
+                        reasonLabel.text = reason
+                        reasonLabel.font = UIFont.systemFont(ofSize: 13)
+                        reasonLabel.textColor = .gray
+                        reasonLabel.numberOfLines = 0
+                        reasonLabel.isUserInteractionEnabled = true
 
-                            let titleLabel = UILabel()
-                            let cleanedTitle = title.replacingOccurrences(of: #"^\d+\.\s*"#, with: "", options: .regularExpression)
-                            titleLabel.text = "🎵 " + cleanedTitle
-                            titleLabel.font = UIFont.systemFont(ofSize: 18)
-                            titleLabel.isUserInteractionEnabled = true
-                            let tap = UITapGestureRecognizer(target: self, action: #selector(self.copySongText(_:)))
-                            titleLabel.addGestureRecognizer(tap)
+                        let reasonTap = ReasonLabelTapGestureRecognizer(target: self, action: #selector(self.copyReasonRelatedTitle(_:)))
+                        reasonTap.relatedTitleLabel = titleLabel
+                        reasonLabel.addGestureRecognizer(reasonTap)
 
-                            let reasonLabel = UILabel()
-                            reasonLabel.text = reason
-                            reasonLabel.font = UIFont.systemFont(ofSize: 13)
-                            reasonLabel.textColor = .gray
-                            reasonLabel.numberOfLines = 0
-                            reasonLabel.isUserInteractionEnabled = true
+                        container.addArrangedSubview(titleLabel)
+                        container.addArrangedSubview(reasonLabel)
 
-                            let reasonTap = ReasonLabelTapGestureRecognizer(target: self, action: #selector(self.copyReasonRelatedTitle(_:)))
-                            reasonTap.relatedTitleLabel = titleLabel
-                            reasonLabel.addGestureRecognizer(reasonTap)
-
-                            container.addArrangedSubview(titleLabel)
-                            container.addArrangedSubview(reasonLabel)
-
-                            self.recommendationStackView.addArrangedSubview(container)
-                        }
+                        self.recommendationStackView.addArrangedSubview(container)
                     }
-                    self.recommendationStackView.isHidden = false
                 }
+                self.recommendationStackView.isHidden = false
             }
         }
     }
@@ -312,7 +236,7 @@ class MujiEmotionMapViewController: UIViewController, CLLocationManagerDelegate,
         guard let label = sender.view as? UILabel,
               let text = label.text else { return }
 
-        let copiedText = text.replacingOccurrences(of: "🎵 ", with: "")
+        let copiedText = text.replacingOccurrences(of: "\u{1F3B5} ", with: "")
         UIPasteboard.general.string = copiedText
         showToast(message: "\(copiedText) 복사되었습니다.")
     }
@@ -321,7 +245,7 @@ class MujiEmotionMapViewController: UIViewController, CLLocationManagerDelegate,
         guard let label = sender.relatedTitleLabel,
               let text = label.text else { return }
 
-        let copiedText = text.replacingOccurrences(of: "🎵 ", with: "")
+        let copiedText = text.replacingOccurrences(of: "\u{1F3B5} ", with: "")
         UIPasteboard.general.string = copiedText
         showToast(message: "\(copiedText) 복사되었습니다.")
     }
@@ -366,6 +290,14 @@ class MujiEmotionMapViewController: UIViewController, CLLocationManagerDelegate,
                 })
             }
         }
+    }
+
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        currentLocation = locations.last?.coordinate
+    }
+
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("위치 정보 가져오기 실패: \(error)")
     }
 }
 
