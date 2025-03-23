@@ -3,6 +3,7 @@
 
 import Foundation
 import CoreData
+import CoreLocation
 
 // MARK: 사용자가 맵 뷰에 남긴 감정 이모지 데이터 관리 로직
 class EmotionViewModel {
@@ -42,7 +43,7 @@ class EmotionViewModel {
 // MARK: 감정 이모지 데이터 추가
     func addEmotion(emotion: String, comment: String, latitude: Double, longitude: Double) {
         let context = CoreDataManager.shared.mainContext
-
+        
         let newEmotion = EmotionEntity(context: context)
         
         newEmotion.emotion = emotion
@@ -50,11 +51,24 @@ class EmotionViewModel {
         newEmotion.latitude = latitude
         newEmotion.longitude = longitude
         newEmotion.date = Date()
-        
-        CoreDataManager.shared.saveContext()
-        fetchEmotions()
+        let location = CLLocation(latitude: latitude, longitude: longitude)
+        let geocoder = CLGeocoder()
+        geocoder.reverseGeocodeLocation(location) { placemarks, error in
+            if let placemark = placemarks?.first {
+                let address = [placemark.administrativeArea,
+                               placemark.locality,
+                               placemark.thoroughfare]
+                    .compactMap { $0 }
+                    .joined(separator: " ")
+                newEmotion.location = address
+            } else {
+                newEmotion.location = "위치 정보 없음"
+            }
+            
+            CoreDataManager.shared.saveContext()
+            self.fetchEmotions()
+        }
     }
-    
 // MARK: 사용자가 기록한 감정 이모지 통계
     func getEmotionStatistics() -> [String: Int] {
         var stats: [String: Int] = [:]

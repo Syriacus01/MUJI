@@ -24,6 +24,7 @@ FetchWeather().fetchWeather(lat: "37.56", lon: "126.97") { weatherInfo in
 import Foundation
 
 class FetchWeather {
+    static let shared = FetchWeather()
     
     let weatherAPIKey: String = {
         guard let key = ProcessInfo.processInfo.environment["WEATHER_API_KEY"] else {
