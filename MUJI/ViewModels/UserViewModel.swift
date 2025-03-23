@@ -41,7 +41,6 @@ class UserViewModel: ObservableObject {
                                  musicGenre: genres,
                                  userInfo: true
                 )
-                updateUser(name: name, age: age, profileImage: image, musicGenre: genres.joined())
             } else { // 사용자 정보 데이터가 없으면
                 user = nil
             }

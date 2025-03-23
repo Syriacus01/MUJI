@@ -17,6 +17,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let window = UIWindow(windowScene: windowScene)
         // UIWindow 객체 생성 후 유효성 검사를 한 windowScene를 사용해서 초기화
+        
+        // 앱 실행 시 사용자 정보를 Core Data에 기본값을 저장 (한 번만 실행되며, nil값 방지)
+        UserViewModel.shared.updateUser(name: "이름", age: 0, profileImage: UIImage(), musicGenre: "K-POP")
+        
         UserViewModel.shared.fetchUser()// 앱 실행 시 Core Data에 저장된 데이터를 불러옴
         
         let vc = MujiMainViewController()//메인뷰 변경
