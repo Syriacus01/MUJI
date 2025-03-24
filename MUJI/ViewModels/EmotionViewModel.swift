@@ -82,4 +82,32 @@ class EmotionViewModel {
         }
         return percentage
     }
+    //50m이내 중복 핀 처리할때 배열에서 삭제하는 함수
+    func deleteEmotion(near coordinate: CLLocationCoordinate2D) {
+        let context = CoreDataManager.shared.mainContext
+
+        let fetchRequest: NSFetchRequest<EmotionEntity> = EmotionEntity.fetchRequest()
+
+        do {
+            let results = try context.fetch(fetchRequest)
+
+            for entity in results {
+                let entityLocation = CLLocation(latitude: entity.latitude, longitude: entity.longitude)
+                let targetLocation = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+                let distance = entityLocation.distance(from: targetLocation)
+
+                if distance <= 50 {
+                    context.delete(entity)
+                }
+            }
+
+            CoreDataManager.shared.saveContext() //Core Data에 실제 반영
+            self.fetchEmotions() //배열(emotions) 최신화
+
+        } catch {
+            print("이모지 삭제 중 오류 발생: \(error)")
+        }
+    }
+
+
 }

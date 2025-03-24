@@ -15,8 +15,17 @@ class MujiMainViewController: UIViewController, UITabBarDelegate, CLLocationMana
         setupMapView()    // 지도 설정
         setupTabBar()     // 기존 setupTabBar 유지
         setupLocationManager() // 위치 관리자 설정
+        
+        for emotion in EmotionViewModel.shared.emotions {
+            let coordinate = CLLocationCoordinate2D(latitude: emotion.latitude, longitude: emotion.longitude)
+            let annotation = MKPointAnnotation()
+            annotation.coordinate = coordinate
+            annotation.title = emotion.comment
+            annotation.subtitle = emotion.emotion
+            mapView.addAnnotation(annotation)
+            annotations.append(annotation)
+        }
     }
-    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         setupSheetView() // 모달 시트 생성
@@ -161,8 +170,12 @@ class MujiMainViewController: UIViewController, UITabBarDelegate, CLLocationMana
             if let index = annotations.firstIndex(where: { $0 === annotation }) {
                 annotations.remove(at: index)
             }
+
+            //데이터에서 삭제
+            EmotionViewModel.shared.deleteEmotion(near: annotation.coordinate)
         }
     }
+
 
     // 지도에서 이모지 표시 (MKAnnotationView 커스텀)
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {

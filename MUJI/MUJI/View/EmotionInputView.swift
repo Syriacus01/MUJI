@@ -26,7 +26,7 @@ class EmotionInputView: UIView {
         return textField
     }()
 
-    private let emojiOptions: [String] = ["😀", "😡", "😶", "😭", "🤒"]
+    private let emojiOptions: [String] = ["😀", "😡", "😐", "😭", "🤒"]
 
     private let emojiStackView: UIStackView = {
         let stackView = UIStackView()

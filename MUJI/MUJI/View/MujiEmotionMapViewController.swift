@@ -26,7 +26,13 @@ class MujiEmotionMapViewController: UIViewController, CLLocationManagerDelegate,
 
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "감정지도"
+        let titles = [
+                        "지금 내 마음은?",
+                        "니 심정 어때?",
+                        "너의 마음 상태를 눌러봐",
+                        "오늘 하루는 어땠어?"
+                    ]
+                    label.text = titles.randomElement() ?? "감정지도"
         label.font = UIFont.boldSystemFont(ofSize: 22)
         label.textAlignment = .center
         return label
