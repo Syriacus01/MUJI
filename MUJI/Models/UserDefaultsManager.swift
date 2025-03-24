@@ -188,6 +188,11 @@ class UserDefaultsManager {
         if let age = age { saveAge(age) }
         saveGenres(genres)
         if let image = image { saveProfileImage(image) }
+        
+    // core data에 수정된 값 업데이트
+        let ageInt = Int(age ?? "") ?? 0
+        let profileImage = image ?? UIImage()
+        UserViewModel.shared.updateUser(name: name, age: ageInt, profileImage: profileImage, musicGenre: genres.joined(separator: ","))
     }
     
     // 프로필 초기화 (기본값으로 복원)
