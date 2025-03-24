@@ -77,7 +77,8 @@ class UserViewModel: ObservableObject {
                     newUser.profileImage = imageData
                 } // UIImage를 Data로 변환해서 저장
             }
-            CoreDataManager.shared.saveContext() // 변경된 사용자 정보 저장
+            CoreDataManager.shared.saveContext()
+            print("유저 정보 코어데이터 저장완료")// 변경된 사용자 정보 저장
         } catch {
             print("사용자 정보 저장에 실패했습니다.")
         }
@@ -109,35 +110,46 @@ class UserViewModel: ObservableObject {
     
 // MARK: UserDefaults -> Core Data로 변환
     func userDefaultsToCoreData() {
-        guard let userDict = UserDefaults.standard.dictionary(forKey: "user") else {
-            print("키 or 값이 저장되어 있지 않습니다.")
-            return
-        }
+        print("userDefaultsToCoreData 실행됨")
+        
+        let defaults = UserDefaults.standard
         let context = CoreDataManager.shared.mainContext
         
-        let userEntity = UserEntity(context: context)
+        let name = defaults.string(forKey: "profile_name") ?? ""
+        let ageString = defaults.string(forKey: "profile_age") ?? ""
+        let age = Int(ageString)
+        let musicGenre = defaults.stringArray(forKey: "profile_genres") ?? []
+        let imageData = defaults.data(forKey: "profile_image") ?? Data()
         
-        if let name = userDict["name"] as? String {
-            userEntity.name = name
-        }
-        if let age = userDict["age"] as? Int {
-            userEntity.age = Int64(age)
-        }
-        if let genres = userDict["genres"] as? [String] {
-            userEntity.musicGenre = genres.joined(separator: ", ")
-        }
-        if let imageData = userDict["profileImageData"] as? Data {
-            userEntity.profileImage = imageData
-        }
+        print("이름: \(name), 나이: \(age), 장르: \(musicGenre)")
+        
+        let fetchRequest: NSFetchRequest<UserEntity> = UserEntity.fetchRequest()
+        
         do {
+            let result = try context.fetch(fetchRequest)
+            let userEntity = result.first ?? UserEntity(context: context)
+            
+            userEntity.name = name
+            userEntity.age = Int64(age ?? 0)
+            userEntity.musicGenre = musicGenre.joined(separator: ",")
+            userEntity.profileImage = imageData
+            
             try context.save()
-            print("새로운 UserEntity를 생성하여 저장하였습니다.")
+            print("coredata에 저장완료")
+            defaults.set(true, forKey: "user_synced_to_coredata")
         } catch {
-            print("Core Data 저장 실패")
+            print("coredata 저장실패")
         }
-        UserDefaults.standard.removeObject(forKey: "user")
-        print("UserDefaults에서 'user' 키의 값을 제거하였습니다.")
-        
         fetchUser()
+    }
+
+// GPT API로 저장된 유저 정보 가져올 때 사용
+    func getUserInfo() -> (age: Int, genre: String)? {
+        guard let user = user else {
+            print("저장된 유저 정보 없음")
+            return nil
+        }
+        let genreString = user.musicGenre.joined(separator: ", ")
+        return (age: user.age, genre: genreString)
     }
 }

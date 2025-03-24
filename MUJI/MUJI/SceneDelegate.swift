@@ -17,11 +17,25 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let window = UIWindow(windowScene: windowScene)
         // UIWindow 객체 생성 후 유효성 검사를 한 windowScene를 사용해서 초기화
+        UserViewModel.shared.userDefaultsToCoreData() //[1]
+        // 앱 실행 시 Core Data에 저장된 유저 데이터 불러옴
+        UserViewModel.shared.fetchUser()
         
-        // 앱 실행 시 사용자 정보를 Core Data에 기본값을 저장 (한 번만 실행되며, nil값 방지)
-        UserViewModel.shared.updateUser(name: "이름", age: 0, profileImage: UIImage(), musicGenre: "팝")
+        UserViewModel.shared.onUpdate = {
+            if let user = UserViewModel.shared.user {
+                print("코어데이터에서 가져온 사용자 정보")
+                print("이름:\(user.name), 나이: \(user.age), 장르: \(user.musicGenre)")
+            } else {
+                print("저장 안됨")
+            }
+        }
+        // 앱 재실행 시 유저 정보가 있으면 업데이트
+        if let user = UserViewModel.shared.user {
+            UserViewModel.shared.updateUser(name: user.name, age: user.age, profileImage: user.profileImage, musicGenre: user.musicGenre.joined(separator: ","))
+        }
         
-        UserViewModel.shared.fetchUser()// 앱 실행 시 Core Data에 저장된 데이터를 불러옴
+        // 앱 실행 시 Core Data에 저장된 핀 데이터를 불러옴
+        EmotionViewModel.shared.fetchEmotions()
         
         let vc = MujiMainViewController()//메인뷰 변경
         window.rootViewController = vc
@@ -30,7 +44,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window.makeKeyAndVisible()
         // makeKeyAndVisible 메서드 호출하여 window를 화면에 표시하고 key window로 지정. (key window는 사용자 입력을 받는 window)
-        EmotionViewModel.shared.fetchEmotions() // 앱 실행 시 Core Data에 저장된 핀 데이터를 불러옴
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
