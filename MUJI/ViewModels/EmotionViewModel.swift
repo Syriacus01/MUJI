@@ -18,26 +18,28 @@ class EmotionViewModel {
     // MARK: 사용자가 입력한 감정 이모지 데이터 불러오기
     func fetchEmotions() {
         let context = CoreDataManager.shared.mainContext
-        
         let fetchRequest: NSFetchRequest<EmotionEntity> = EmotionEntity.fetchRequest()
+        
         do {
-            let results = try context.fetch(fetchRequest) // 사용자가 입력한 감정 이모지 불러오기
-            
-            emotions = results.map { entity in
-                let dateValue = entity.date ?? Date()
-                
-                return EmotionModel(
+            self.emotions = try context.fetch(fetchRequest).map { entity in
+                EmotionModel(
                     emotion: entity.emotion ?? "",
                     comment: entity.comment ?? "",
                     latitude: entity.latitude,
                     longitude: entity.longitude,
                     address: entity.location ?? "",
-                    date: dateValue
+                    date: entity.date ?? Date()
                 )
             }
+            self.emotionPins = self.emotions
+
+            print("emotions 배열: \(emotions.count)")
+            print("emotionPins 배열: \(emotionPins.count)")
+
         } catch {
-            print("이모지 기록 데이터 불러오기 실패" )
+            print("이모지 기록 데이터 불러오기 실패")
         }
+
         onUpdate?()
         updateEmotionView()
     }

@@ -23,8 +23,8 @@ class MujiBottomSheetViewController: UIViewController {
         switch index {
         case 0:
             currentViewController = MujiEmotionMapViewController()
-        case 1:
-            currentViewController = SearchViewController()//PlayViewController()//음악추천
+        //case 1:
+            //currentViewController = SearchViewController()//PlayViewController()//음악추천
         case 2:
             currentViewController = MainTabBarController()//프로필뷰
         default:

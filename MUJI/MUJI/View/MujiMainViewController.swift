@@ -172,7 +172,7 @@ class MujiMainViewController: UIViewController, UITabBarDelegate, CLLocationMana
             }
 
             //데이터에서 삭제
-            //EmotionViewModel.shared.deleteEmotion(near: annotation.coordinate)
+            EmotionViewModel.shared.deleteEmotion(near: annotation.coordinate)
         }
     }
 
