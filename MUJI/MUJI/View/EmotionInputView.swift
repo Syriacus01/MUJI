@@ -20,11 +20,15 @@ class EmotionInputView: UIView {
     }()
 
     let emotionTextField: UITextField = {
-        let textField = UITextField()
-        textField.placeholder = "감정을 입력하세요"
-        textField.borderStyle = .roundedRect
-        return textField
-    }()
+            let textField = UITextField()
+            textField.placeholder = "감정을 간단히 표현해보세요"
+            textField.borderStyle = .roundedRect
+            textField.font = UIFont.systemFont(ofSize: 16)
+            textField.returnKeyType = .done
+            textField.clearButtonMode = .whileEditing
+            return textField
+        }()
+
 
     private let emojiOptions: [String] = ["😀", "😡", "😐", "😭", "🤒"]
 

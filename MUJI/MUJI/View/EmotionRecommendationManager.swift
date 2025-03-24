@@ -24,7 +24,7 @@ final class EmotionRecommendationManager {
         user: UserModel?,
         completion: @escaping ([String]) -> Void
     ) {
-        UserViewModel.shared.fetchUser()// 업데이트 해줄것
+        //UserViewModel.shared.fetchUser()// 업데이트 해줄것
         FetchWeather.shared.fetchWeather(lat: "\(location.latitude)", lon: "\(location.longitude)") { weatherInfo in
             UserViewModel.shared.fetchUser()
 

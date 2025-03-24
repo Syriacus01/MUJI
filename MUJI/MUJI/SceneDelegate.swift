@@ -36,7 +36,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         // 앱 실행 시 Core Data에 저장된 핀 데이터를 불러옴
         EmotionViewModel.shared.fetchEmotions()
-        
+        EmotionViewModel.shared.fetchEmotionsPin()
         let vc = MujiMainViewController()//메인뷰 변경
         window.rootViewController = vc
         self.window = window

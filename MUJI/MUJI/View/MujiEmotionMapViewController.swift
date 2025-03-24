@@ -27,12 +27,12 @@ class MujiEmotionMapViewController: UIViewController, CLLocationManagerDelegate,
     private let titleLabel: UILabel = {
         let label = UILabel()
         let titles = [
-                        "지금 내 마음은?",
-                        "니 심정 어때?",
-                        "너의 마음 상태를 눌러봐",
-                        "오늘 하루는 어땠어?"
-                    ]
-                    label.text = titles.randomElement() ?? "감정지도"
+            "지금 내 마음은?",
+            "니 심정 어때?",
+            "너의 마음 상태를 눌러봐",
+            "오늘 하루는 어땠어?"
+        ]
+        label.text = titles.randomElement() ?? "감정지도"
         label.font = UIFont.boldSystemFont(ofSize: 22)
         label.textAlignment = .center
         return label
@@ -44,9 +44,10 @@ class MujiEmotionMapViewController: UIViewController, CLLocationManagerDelegate,
         let button = UIButton(type: .system)
         button.setTitle("검색", for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
-        button.backgroundColor = .systemBlue
+        button.backgroundColor = .lightGray
         button.tintColor = .white
         button.layer.cornerRadius = 10
+        button.isEnabled = false
         return button
     }()
 
@@ -85,6 +86,7 @@ class MujiEmotionMapViewController: UIViewController, CLLocationManagerDelegate,
         locationManager.requestWhenInUseAuthorization()
         locationManager.requestLocation()
         emotionInputView.emotionTextField.delegate = self
+        emotionInputView.emotionTextField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
 
         view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard)))
 
@@ -102,6 +104,12 @@ class MujiEmotionMapViewController: UIViewController, CLLocationManagerDelegate,
 
     @objc private func dismissKeyboard() {
         view.endEditing(true)
+    }
+
+    @objc private func textFieldDidChange(_ textField: UITextField) {
+        let trimmed = textField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        saveButton.isEnabled = !trimmed.isEmpty
+        saveButton.backgroundColor = trimmed.isEmpty ? .lightGray : .systemBlue
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -149,10 +157,11 @@ class MujiEmotionMapViewController: UIViewController, CLLocationManagerDelegate,
         view.endEditing(true)
 
         let emoji = selectedEmoji
-        let emotionText = emotionInputView.emotionTextField.text ?? ""
+        let rawText = emotionInputView.emotionTextField.text ?? ""
+        let emotionText = rawText.trimmingCharacters(in: .whitespacesAndNewlines)
 
         guard !emotionText.isEmpty else {
-            showToast(message: "감정을 입력해주세요 ")
+            showToast(message: "감정을 입력해주세요")
             return
         }
 

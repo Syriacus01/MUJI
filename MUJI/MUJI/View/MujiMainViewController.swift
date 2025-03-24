@@ -16,7 +16,7 @@ class MujiMainViewController: UIViewController, UITabBarDelegate, CLLocationMana
         setupTabBar()     // 기존 setupTabBar 유지
         setupLocationManager() // 위치 관리자 설정
         
-        for emotion in EmotionViewModel.shared.emotions {
+        for emotion in EmotionViewModel.shared.emotionPins {
             let coordinate = CLLocationCoordinate2D(latitude: emotion.latitude, longitude: emotion.longitude)
             let annotation = MKPointAnnotation()
             annotation.coordinate = coordinate
@@ -114,7 +114,7 @@ class MujiMainViewController: UIViewController, UITabBarDelegate, CLLocationMana
 
         // UISheetPresentationController 설정
         if let sheet = bottomSheet.sheetPresentationController {
-            let smallDetent = UISheetPresentationController.Detent.custom { _ in 100 } // 스몰 크기 설정
+            let smallDetent = UISheetPresentationController.Detent.custom { _ in 100} // 스몰 크기 설정
             sheet.detents = [smallDetent, .medium(), .large()]
             sheet.prefersGrabberVisible = true
             sheet.largestUndimmedDetentIdentifier = .medium
@@ -157,23 +157,26 @@ class MujiMainViewController: UIViewController, UITabBarDelegate, CLLocationMana
     private func removeNearbyAnnotations(near coordinate: CLLocationCoordinate2D) {
         let threshold: Double = 50.0 // 오차 범위 (50m)
 
-        let existingAnnotations = mapView.annotations.filter { annotation in
-            guard let annotation = annotation as? MKPointAnnotation else { return false }
+        let closeAnnotations = mapView.annotations.compactMap { annotation -> MKPointAnnotation? in
+            guard let annotation = annotation as? MKPointAnnotation else { return nil }
             let pinLocation = CLLocation(latitude: annotation.coordinate.latitude, longitude: annotation.coordinate.longitude)
             let userLocation = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
-            return pinLocation.distance(from: userLocation) < threshold
+            return pinLocation.distance(from: userLocation) < threshold ? annotation : nil
         }
 
-        // 기존 이모지 삭제
-        existingAnnotations.forEach { annotation in
+        // CoreData에서 삭제할 좌표 리스트
+        let coordinatesToDelete = closeAnnotations.map { $0.coordinate }
+
+        // 지도에서 제거
+        closeAnnotations.forEach { annotation in
             mapView.removeAnnotation(annotation)
             if let index = annotations.firstIndex(where: { $0 === annotation }) {
                 annotations.remove(at: index)
             }
-
-            //데이터에서 삭제
-            EmotionViewModel.shared.deleteEmotion(near: annotation.coordinate)
         }
+
+        // CoreData에서 한 번에 삭제
+        EmotionViewModel.shared.deleteEmotions(at: coordinatesToDelete)
     }
 
 
