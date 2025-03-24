@@ -1,37 +1,49 @@
 import UIKit
 import MusicKit
 
+private struct UIConstants {
+    static let searchBarPlaceholder = "검색"
+    static let tableViewCellIdentifier = "cell"
+    static let blurStyle: UIBlurEffect.Style = .systemMaterial
+}
+
+private struct Constants {
+    static let unsupportedSelectionMessage = "선택한 항목은 재생할 수 없습니다."
+    static let songDidChangeNotificationName = "SongDidChange"
+}
+
+// MARK: - MusicSearchResult Enum
 // MusicKit 검색 결과를 나타내는 열거형
 enum MusicSearchResult {
-    case song(Song)
-    case album(Album)
-    case artist(Artist)
-    case playlist(Playlist)
+    case song(Song)          // 노래 결과
+    case album(Album)        // 앨범 결과
+    case artist(Artist)      // 아티스트 결과
+    case playlist(Playlist)  // 재생목록 결과
     
     // 검색 결과에 대한 표시 텍스트를 반환
     var displayText: String {
         switch self {
         case .song(let song):
-            return "\(song.title) - \(song.artistName)"
+            return "\(song.title) - \(song.artistName)" // 노래 제목과 아티스트 이름
         case .album(let album):
-            return "\(album.title) - 앨범"
+            return "\(album.title) - 앨범" // 앨범 제목
         case .artist(let artist):
-            return artist.name
+            return artist.name // 아티스트 이름
         case .playlist(let playlist):
-            return "\(playlist.name) - 재생목록"
+            return "\(playlist.name) - 재생목록" // 재생목록 이름
         }
     }
 }
 
+// MARK: - SearchViewController
 // SearchViewController는 MusicKit을 사용한 검색 기능을 담당하는 뷰 컨트롤러입니다.
 class SearchViewController: UIViewController {
     
     // MARK: - UI 컴포넌트
-    
     // 검색창: 사용자로부터 검색어를 입력받습니다.
     private let searchBar: UISearchBar = {
         let sb = UISearchBar()
-        sb.placeholder = "검색"
+        sb.placeholder = UIConstants.searchBarPlaceholder
         sb.setBackgroundImage(UIImage(), for: .any, barMetrics: .default)
         sb.isTranslucent = true
         sb.backgroundColor = UIColor.clear
@@ -53,14 +65,13 @@ class SearchViewController: UIViewController {
     
     // 전체 화면에 적용될 블러 효과 뷰
     private let blurEffectView: UIVisualEffectView = {
-        let blur = UIBlurEffect(style: .systemMaterial)
+        let blur = UIBlurEffect(style: UIConstants.blurStyle)
         let view = UIVisualEffectView(effect: blur)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
     // MARK: - 생명주기 메서드
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -98,7 +109,7 @@ class SearchViewController: UIViewController {
         searchBar.delegate = self
         resultsTableView.delegate = self
         resultsTableView.dataSource = self
-        resultsTableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        resultsTableView.register(UITableViewCell.self, forCellReuseIdentifier: UIConstants.tableViewCellIdentifier)
         
         // (6) 화면 탭 시 키보드 숨김
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
@@ -114,7 +125,6 @@ class SearchViewController: UIViewController {
     }
     
     // MARK: - 사용자 액션 메서드
-    
     // 키보드를 숨기는 메서드
     @objc private func dismissKeyboard() {
         view.endEditing(true)
@@ -155,30 +165,27 @@ extension SearchViewController: UISearchBarDelegate {
 // MARK: - UITableViewDelegate, UITableViewDataSource 구현
 extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     // 테이블 뷰의 행 개수 반환
-    func tableView(_ tableView: UITableView,
-                   numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return searchResults.count
     }
     
     // 각 행에 대한 셀 생성 및 구성
-    func tableView(_ tableView: UITableView,
-                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: UIConstants.tableViewCellIdentifier, for: indexPath)
         let result = searchResults[indexPath.row]
         cell.textLabel?.text = result.displayText
         return cell
     }
     
     // 셀 선택 시 처리
-    func tableView(_ tableView: UITableView,
-                   didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedResult = searchResults[indexPath.row]
         switch selectedResult {
         case .song(let song):
             // 선택된 노래 재생
             playSong(song)
         default:
-            print("선택한 항목은 재생할 수 없습니다.")
+            print(Constants.unsupportedSelectionMessage)
         }
         tableView.deselectRow(at: indexPath, animated: true)
         // 모달 화면 닫기 (옵션)
@@ -193,10 +200,11 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
                 player.queue = [song]
                 try await player.play()
                 // 노래 변경 시 앨범 커버 업데이트를 위한 알림 전송
-                NotificationCenter.default.post(name: Notification.Name("SongDidChange"), object: song)
+                NotificationCenter.default.post(name: Notification.Name(Constants.songDidChangeNotificationName), object: song)
             } catch {
                 print("노래 재생 중 에러 발생: \(error)")
             }
         }
     }
 }
+
