@@ -46,15 +46,15 @@ class EmotionStatsViewController: UIViewController {
             self.emotions = loadedEmotions
         } else {
             // 기본 데이터 설정
-            let defaultEmotions: [EmotionStat] = [
-                EmotionStat(emoji: "😀", label: "행복", percentage: 45, primaryColor: "255,210,210", secondaryColor: "255,176,176"),
-                EmotionStat(emoji: "😡", label: "화남", percentage: 25, primaryColor: "210,227,255", secondaryColor: "176,201,255"),
-                EmotionStat(emoji: "😶", label: "평온", percentage: 15, primaryColor: "255,225,210", secondaryColor: "255,204,176"),
-                EmotionStat(emoji: "😭", label: "슬픔", percentage: 15, primaryColor: "210,255,227", secondaryColor: "176,255,212"),
-                EmotionStat(emoji: "🤒", label: "아픔", percentage: 15, primaryColor: "210,255,227", secondaryColor: "176,255,212")
-            ]
+//            let defaultEmotions: [EmotionStat] = [
+//                EmotionStat(emoji: "😀", label: "행복", percentage: 45, primaryColor: "255,210,210", secondaryColor: "255,176,176"),
+//                EmotionStat(emoji: "😡", label: "화남", percentage: 25, primaryColor: "210,227,255", secondaryColor: "176,201,255"),
+//                EmotionStat(emoji: "😶", label: "평온", percentage: 15, primaryColor: "255,225,210", secondaryColor: "255,204,176"),
+//                EmotionStat(emoji: "😭", label: "슬픔", percentage: 15, primaryColor: "210,255,227", secondaryColor: "176,255,212"),
+//                EmotionStat(emoji: "🤒", label: "아픔", percentage: 15, primaryColor: "210,255,227", secondaryColor: "176,255,212")
+//            ]
             
-            self.emotions = defaultEmotions
+//            self.emotions = defaultEmotions
         }
     }
     
