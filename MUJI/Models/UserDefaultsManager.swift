@@ -38,7 +38,7 @@ class UserDefaultsManager {
     //private var initialDefaultUsername = "@doyeon_kim"
     private var initialDefaultBio = "메시지를 입력해주세요"
     //private var initialDefaultLocation = "서울, 대한민국"
-    private var initialDefaultGenres = ["팝ㅋ"]
+    private var initialDefaultGenres = ["팝"]
     private var initialDefaultAge = "나이"
     
     // 초기화 메서드
@@ -97,7 +97,7 @@ class UserDefaultsManager {
     func saveUsername(_ username: String) {
         defaults.set(username, forKey: Keys.username)
     }
-    /*
+    /* @아이디 부분 주석처리
     func getUsername() -> String {
         return defaults.string(forKey: Keys.username) ?? getDefaultUsername()
     }*/
@@ -106,7 +106,8 @@ class UserDefaultsManager {
         defaults.set(username, forKey: Keys.defaultUsername)
     }
     
-    /*func getDefaultUsername() -> String {
+    /*
+     func getDefaultUsername() -> String {
         return defaults.string(forKey: Keys.defaultUsername) ?? initialDefaultUsername
     }*/
     
