@@ -1,7 +1,40 @@
 //import UIKit
 //import MusicKit
 //import MediaPlayer
-//import AVKit
+//
+//private struct Constants {
+//    static let defaultSongSearchTerm = "I CAN DO IT WITH A BROKEN HEART! - Taylor Swift"
+//    static let songDidChangeNotificationName = "SongDidChange"
+//    static let progressUpdateInterval: TimeInterval = 1.0
+//}
+//
+//private struct UIConstants {
+//    static let playPauseButtonSize: CGFloat = 100
+//    static let controlButtonSizeRatio: CGFloat = 0.6
+//    static let buttonSpacing: CGFloat = 15
+//    static let artworkImageSize: CGFloat = 350
+//    static let artworkTopPadding: CGFloat = 20
+//    static let songTitleTopPadding: CGFloat = 10
+//    static let artistNameTopPadding: CGFloat = 4
+//    static let progressSliderTopPadding: CGFloat = 23
+//    static let volumeViewTopPadding: CGFloat = 10
+//    static let progressSliderSidePadding: CGFloat = 40
+//    static let volumeViewHeight: CGFloat = 40
+//
+//    static let playIconName = "play.fill"
+//    static let pauseIconName = "pause.fill"
+//    static let forwardIconName = "forward.fill"
+//    static let backwardIconName = "backward.fill"
+//    static let searchPlaceholderText = "Apple Music에서 곡 검색"
+//    static let artworkImageFetchSize = 2000
+//    static let searchModalBackgroundAlpha: CGFloat = 0.3
+//    static let songTitleFont = UIFont.systemFont(ofSize: 23, weight: .semibold)
+//    static let artistNameFont = UIFont.systemFont(ofSize: 21, weight: .regular)
+//    static let songTitleColor = UIColor.white
+//    static let artistNameColor = UIColor.darkGray
+//    static let sheetCornerRadius: CGFloat = 20
+//    static let tabBarBlurAlpha: CGFloat = 0.5
+//}
 //
 ///// Apple Music 재생을 위한 싱글톤 Player
 //class MusicPlayerManager {
@@ -17,7 +50,7 @@
 //}
 //
 ///// 메인 ViewController: Apple Music 재생 & 앨범 커버 반투명 배경 + 슬라이더 UI
-//class PlayViewController: UIViewController, UISearchBarDelegate {
+//class ViewController: UIViewController {
 //    
 //    // MARK: - MusicKit 관련 속성
 //    
@@ -56,8 +89,8 @@
 //    /// 곡 제목 라벨
 //    private let songTitleLabel: UILabel = {
 //        let label = UILabel()
-//        label.font = UIFont.systemFont(ofSize: 23, weight: .semibold)
-//        label.textColor = .white
+//        label.font = UIConstants.songTitleFont
+//        label.textColor = UIConstants.songTitleColor
 //        label.textAlignment = .center
 //        label.translatesAutoresizingMaskIntoConstraints = false
 //        return label
@@ -66,8 +99,8 @@
 //    /// 아티스트명 라벨
 //    private let artistNameLabel: UILabel = {
 //        let label = UILabel()
-//        label.font = UIFont.systemFont(ofSize: 21, weight: .regular)
-//        label.textColor = .lightGray
+//        label.font = UIConstants.artistNameFont
+//        label.textColor = UIConstants.artistNameColor
 //        label.textAlignment = .center
 //        label.translatesAutoresizingMaskIntoConstraints = false
 //        return label
@@ -76,7 +109,7 @@
 //    /// 재생/일시정지 버튼
 //    private let playPauseButton: UIButton = {
 //        let button = UIButton(type: .system)
-//        button.setImage(UIImage(systemName: "play.fill"), for: .normal)
+//        button.setImage(UIImage(systemName: UIConstants.playIconName), for: .normal)
 //        button.translatesAutoresizingMaskIntoConstraints = false
 //        return button
 //    }()
@@ -84,7 +117,7 @@
 //    /// 이전 곡 버튼
 //    private let previousButton: UIButton = {
 //        let button = UIButton(type: .system)
-//        button.setImage(UIImage(systemName: "backward.fill"), for: .normal)
+//        button.setImage(UIImage(systemName: UIConstants.backwardIconName), for: .normal)
 //        button.translatesAutoresizingMaskIntoConstraints = false
 //        return button
 //    }()
@@ -92,7 +125,7 @@
 //    /// 다음 곡 버튼
 //    private let nextButton: UIButton = {
 //        let button = UIButton(type: .system)
-//        button.setImage(UIImage(systemName: "forward.fill"), for: .normal)
+//        button.setImage(UIImage(systemName: UIConstants.forwardIconName), for: .normal)
 //        button.translatesAutoresizingMaskIntoConstraints = false
 //        return button
 //    }()
@@ -100,7 +133,7 @@
 //    /// 검색창 (실제 검색은 새 모달 화면(SearchViewController)에서 진행)
 //    private let searchBar: UISearchBar = {
 //        let searchBar = UISearchBar()
-//        searchBar.placeholder = "Apple Music에서 곡 검색"
+//        searchBar.placeholder = UIConstants.searchPlaceholderText
 //        searchBar.backgroundImage = UIImage() // 기본 배경 제거
 //        searchBar.backgroundColor = .clear    // 투명 처리
 //        
@@ -205,7 +238,7 @@
 //        NotificationCenter.default.addObserver(
 //            self,
 //            selector: #selector(nowPlayingItemChanged),
-//            name: Notification.Name("SongDidChange"),
+//            name: Notification.Name(Constants.songDidChangeNotificationName),
 //            object: nil
 //        )
 //        
@@ -216,7 +249,7 @@
 //        setupTabBarBlur()
 //        
 //        // (10) 재생 위치 갱신 타이머 시작
-//        updateTimer = Timer.scheduledTimer(timeInterval: 1.0,
+//        updateTimer = Timer.scheduledTimer(timeInterval: Constants.progressUpdateInterval,
 //                                           target: self,
 //                                           selector: #selector(updateProgressSlider),
 //                                           userInfo: nil,
@@ -252,9 +285,9 @@
 //                let player = MusicPlayerManager.shared.player
 //                // 큐가 비어있다면 곡 검색 후 UI에 표시
 //                if player.queue.entries.isEmpty {
-//                    let searchTerm = "I CAN DO IT WITH A BROKEN HEART! - Taylor Swift"
+//                let defaultSearchTerm = Constants.defaultSongSearchTerm
 //                    let searchRequest = MusicCatalogSearchRequest(
-//                        term: searchTerm,
+//                        term: defaultSearchTerm,
 //                        types: [Song.self, Album.self, Artist.self, Playlist.self]
 //                    )
 //                    let response = try await searchRequest.response()
@@ -264,14 +297,8 @@
 //                        return
 //                    }
 //                    
-//                    if let rubySong = response.songs.first(where: { $0.albumTitle == "Ruby" }) {
-//                        currentSong = rubySong
-//                        player.queue = [rubySong]
-//                        print("Ruby 앨범 버전 선택됨: \(rubySong.title)")
-//                    } else {
-//                        currentSong = firstSong
-//                        player.queue = [firstSong]
-//                    }
+//                    currentSong = firstSong
+//                    player.queue = [firstSong]
 //                    
 //                    // 자동 재생을 원한다면 다음 두 줄을 주석 해제
 //                    // try await player.play()
@@ -295,7 +322,7 @@
 //        let blurView = UIVisualEffectView(effect: blurEffect)
 //        blurView.frame = tabBar.bounds
 //        blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-//        let desiredAlpha: CGFloat = 0.5
+//        let desiredAlpha = UIConstants.tabBarBlurAlpha
 //        blurView.alpha = desiredAlpha
 //        tabBar.insertSubview(blurView, at: 0)
 //    }
@@ -309,64 +336,31 @@
 //    
 //    /// 앨범커버, 곡정보, 재생 버튼 등을 배치하는 함수
 //    private func setupMainUI() {
-//        // 1) 앨범커버 배치
+//        // 앨범커버 배치
 //        view.addSubview(artworkImageView)
 //        NSLayoutConstraint.activate([
-//            artworkImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+//            artworkImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: UIConstants.artworkTopPadding),
 //            artworkImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-//            artworkImageView.widthAnchor.constraint(equalToConstant: 400),
-//            artworkImageView.heightAnchor.constraint(equalToConstant: 400)
+//            artworkImageView.widthAnchor.constraint(equalToConstant: UIConstants.artworkImageSize),
+//            artworkImageView.heightAnchor.constraint(equalToConstant: UIConstants.artworkImageSize)
 //        ])
 //        
-//        // 2) 곡 제목 및 아티스트 라벨 배치
+//        // 곡 제목 및 아티스트 라벨 배치
 //        view.addSubview(songTitleLabel)
 //        view.addSubview(artistNameLabel)
 //        NSLayoutConstraint.activate([
-//            songTitleLabel.topAnchor.constraint(equalTo: artworkImageView.bottomAnchor, constant: 10),
+//            songTitleLabel.topAnchor.constraint(equalTo: artworkImageView.bottomAnchor, constant: UIConstants.songTitleTopPadding),
 //            songTitleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-//            artistNameLabel.topAnchor.constraint(equalTo: songTitleLabel.bottomAnchor, constant: 4),
+//            artistNameLabel.topAnchor.constraint(equalTo: songTitleLabel.bottomAnchor, constant: UIConstants.artistNameTopPadding),
 //            artistNameLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
 //        ])
-//        
-//        // 3) 재생/일시정지, 다음, 이전 버튼 배치
-//        view.addSubview(playPauseButton)
-//        view.addSubview(nextButton)
-//        view.addSubview(previousButton)
 //        
 //        // 버튼 액션 연결
 //        playPauseButton.addTarget(self, action: #selector(playPauseButtonTapped), for: .touchUpInside)
 //        nextButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
 //        previousButton.addTarget(self, action: #selector(previousButtonTapped), for: .touchUpInside)
 //        
-//        // 버튼 레이아웃: 재생/일시정지 버튼을 기준으로 이전, 다음 버튼 배치
-//        // MARK: - UI Layout Constants
-//        /// 재생/일시정지 버튼의 크기 (기본값: 70)
-//        let playPauseButtonSize: CGFloat = 70
-//        /// 이전/다음 버튼은 재생/일시정지 버튼 크기의 몇 배로 표시할지 결정 (기본값: 0.8)
-//        let controlButtonSizeRatio: CGFloat = 0.8
-//        /// 버튼들 사이의 간격 (기본값: 30)
-//        let buttonSpacing: CGFloat = 30
-//        
-//        NSLayoutConstraint.activate([
-//            // 재생/일시정지 버튼: 크기 지정 및 가로 중앙 배치
-//            playPauseButton.widthAnchor.constraint(equalToConstant: playPauseButtonSize),
-//            playPauseButton.heightAnchor.constraint(equalToConstant: playPauseButtonSize),
-//            playPauseButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-//            
-//            // 이전 버튼: 재생 버튼의 왼쪽에 배치, 크기는 재생 버튼의 controlButtonSizeRatio 배율
-//            previousButton.widthAnchor.constraint(equalToConstant: playPauseButtonSize * controlButtonSizeRatio),
-//            previousButton.heightAnchor.constraint(equalToConstant: playPauseButtonSize * controlButtonSizeRatio),
-//            previousButton.centerYAnchor.constraint(equalTo: playPauseButton.centerYAnchor),
-//            previousButton.trailingAnchor.constraint(equalTo: playPauseButton.leadingAnchor, constant: -buttonSpacing),
-//            
-//            // 다음 버튼: 재생 버튼의 오른쪽에 배치, 크기는 재생 버튼의 controlButtonSizeRatio 배율
-//            nextButton.widthAnchor.constraint(equalToConstant: playPauseButtonSize * controlButtonSizeRatio),
-//            nextButton.heightAnchor.constraint(equalToConstant: playPauseButtonSize * controlButtonSizeRatio),
-//            nextButton.centerYAnchor.constraint(equalTo: playPauseButton.centerYAnchor),
-//            nextButton.leadingAnchor.constraint(equalTo: playPauseButton.trailingAnchor, constant: buttonSpacing)
-//        ])
-//        
-//        // 버튼 색상: 흰색 아이콘
+//        // 버튼 색상
 //        [playPauseButton, nextButton, previousButton].forEach {
 //            $0.tintColor = .white
 //        }
@@ -392,21 +386,44 @@
 //        // 볼륨 뷰 배치
 //        view.addSubview(volumeView)
 //        
+//        // 재생 버튼들 배치: progressSlider 아래, volumeView 위에 위치
+//        view.addSubview(playPauseButton)
+//        view.addSubview(nextButton)
+//        view.addSubview(previousButton)
+//        
+//        let playPauseButtonSize = UIConstants.playPauseButtonSize
+//        let controlButtonSizeRatio = UIConstants.controlButtonSizeRatio
+//        let buttonSpacing = UIConstants.buttonSpacing
+//        
 //        NSLayoutConstraint.activate([
 //            // 재생 위치 슬라이더: 아티스트 라벨 아래에 배치, 좌우 40 포인트
-//            progressSlider.topAnchor.constraint(equalTo: artistNameLabel.bottomAnchor, constant: 20),
-//            progressSlider.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
-//            progressSlider.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40),
+//            progressSlider.topAnchor.constraint(equalTo: artistNameLabel.bottomAnchor, constant: UIConstants.progressSliderTopPadding),
+//            progressSlider.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: UIConstants.progressSliderSidePadding),
+//            progressSlider.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -UIConstants.progressSliderSidePadding),
 //            
-//            // 재생/일시정지 버튼: 재생 위치 슬라이더 아래에 배치, 가로 중앙
-//            playPauseButton.topAnchor.constraint(equalTo: progressSlider.bottomAnchor, constant: 20),
+//            // 재생/일시정지 버튼
+//            playPauseButton.widthAnchor.constraint(equalToConstant: playPauseButtonSize),
+//            playPauseButton.heightAnchor.constraint(equalToConstant: playPauseButtonSize),
+//            playPauseButton.topAnchor.constraint(equalTo: progressSlider.bottomAnchor, constant: UIConstants.progressSliderTopPadding),
 //            playPauseButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
 //            
-//            // 볼륨 뷰: 재생/일시정지 버튼 아래에 배치, 재생 슬라이더와 동일한 길이
-//            volumeView.topAnchor.constraint(equalTo: playPauseButton.bottomAnchor, constant: 20),
+//            // 이전 곡 버튼
+//            previousButton.widthAnchor.constraint(equalToConstant: playPauseButtonSize * controlButtonSizeRatio),
+//            previousButton.heightAnchor.constraint(equalToConstant: playPauseButtonSize * controlButtonSizeRatio),
+//            previousButton.centerYAnchor.constraint(equalTo: playPauseButton.centerYAnchor),
+//            previousButton.trailingAnchor.constraint(equalTo: playPauseButton.leadingAnchor, constant: -buttonSpacing),
+//            
+//            // 다음 곡 버튼
+//            nextButton.widthAnchor.constraint(equalToConstant: playPauseButtonSize * controlButtonSizeRatio),
+//            nextButton.heightAnchor.constraint(equalToConstant: playPauseButtonSize * controlButtonSizeRatio),
+//            nextButton.centerYAnchor.constraint(equalTo: playPauseButton.centerYAnchor),
+//            nextButton.leadingAnchor.constraint(equalTo: playPauseButton.trailingAnchor, constant: buttonSpacing),
+//            
+//            // 볼륨 뷰: 재생/일시정지 버튼 아래에 배치
+//            volumeView.topAnchor.constraint(equalTo: playPauseButton.bottomAnchor, constant: UIConstants.volumeViewTopPadding),
 //            volumeView.leadingAnchor.constraint(equalTo: progressSlider.leadingAnchor),
 //            volumeView.trailingAnchor.constraint(equalTo: progressSlider.trailingAnchor),
-//            volumeView.heightAnchor.constraint(equalToConstant: 40)
+//            volumeView.heightAnchor.constraint(equalToConstant: UIConstants.volumeViewHeight)
 //        ])
 //    }
 //    
@@ -415,7 +432,7 @@
 //    /// 현재 곡의 아트워크와 곡 정보를 업데이트하는 함수
 //    private func updateArtwork() {
 //        guard let song = currentSong,
-//              let artworkURL = song.artwork?.url(width: 2000, height: 2000) else { return }
+//        let artworkURL = song.artwork?.url(width: UIConstants.artworkImageFetchSize, height: UIConstants.artworkImageFetchSize) else { return }
 //        
 //        // 비동기로 이미지 다운로드
 //        URLSession.shared.dataTask(with: artworkURL) { [weak self] data, _, error in
@@ -481,6 +498,54 @@
 //            }
 //        }
 //    }
+//
+//    /// 앱 최초 실행 시 Jaded(19) 곡 정보를 불러오는 함수의 실제 구현
+//    ///
+//    /// 이 함수는 다음 단계를 수행합니다:
+//    /// 1. MusicKit 권한 요청: 사용자가 음악 라이브러리 접근을 허용했는지 확인합니다.
+//    /// 2. 플레이어의 큐 확인: 큐가 비어있다면 기본 검색어를 사용하여 곡 검색을 수행합니다.
+//    /// 3. 검색 결과 처리: 검색 결과에서 첫 번째 곡 또는 Ruby 앨범의 곡을 선택하여 큐에 추가합니다.
+//    /// 4. UI 업데이트: 선택된 곡의 아트워크와 정보를 업데이트합니다.
+//    private func autoLoadSongImplementation() {
+//        Task {
+//            do {
+//                // 1. MusicKit 권한 요청: 사용자가 음악 접근 권한을 허용했는지 확인합니다.
+//                let status = await MusicAuthorization.request()
+//                guard status == .authorized else {
+//                    print("Music 권한 거부됨")
+//                    return
+//                }
+//                
+//                let player = MusicPlayerManager.shared.player
+//                // 2. 플레이어 큐 확인: 큐가 비어있다면 기본 검색어로 곡 검색을 수행합니다.
+//                if player.queue.entries.isEmpty {
+//                    let defaultSearchTerm = Constants.defaultSongSearchTerm
+//                    let searchRequest = MusicCatalogSearchRequest(
+//                        term: defaultSearchTerm,
+//                        types: [Song.self, Album.self, Artist.self, Playlist.self]
+//                    )
+//                    let response = try await searchRequest.response()
+//                    
+//                    // 3. 검색 결과 처리: 첫 번째 곡을 선택하거나 Ruby 앨범의 곡이 있으면 해당 곡을 선택합니다.
+//                    guard let firstSong = response.songs.first else {
+//                        print("노래를 찾을 수 없습니다.")
+//                        return
+//                    }
+//                    
+//                    currentSong = firstSong
+//                    player.queue = [firstSong]
+//                    
+//                    // 4. UI 업데이트: 선택된 곡의 아트워크와 정보를 업데이트합니다.
+//                    DispatchQueue.main.async {
+//                        self.updateArtwork()
+//                    }
+//                }
+//            } catch {
+//                print("재생 에러: \(error)")
+//            }
+//        }
+//    }
+//
 //    // MARK: - 재생/일시정지/다음/이전 버튼 액션
 //    
 //    /// 재생/일시정지 버튼 액션
@@ -499,7 +564,7 @@
 //                // 재생 중이면 일시정지, 아니면 재생
 //                if isPlaying {
 //                    player.pause()
-//                    playPauseButton.setImage(UIImage(systemName: "play.fill"), for: .normal)
+//                    playPauseButton.setImage(UIImage(systemName: UIConstants.playIconName), for: .normal)
 //                    isPlaying.toggle()
 //                    return
 //                }
@@ -510,7 +575,7 @@
 //                        player.queue = [song]
 //                    } else {
 //                        // 기본 검색어: 사용자가 입력하지 않을 경우 기본적으로 를 재생하도록 설정
-//                        let searchTerm = searchBar.text?.isEmpty == false ? searchBar.text! : "Love Hangover - 제니 & 도미닉 파이크"
+//                        let searchTerm = searchBar.text?.isEmpty == false ? searchBar.text! : Constants.defaultSongSearchTerm
 //                        let searchRequest = MusicCatalogSearchRequest(
 //                            term: searchTerm,
 //                            types: [Song.self, Album.self, Artist.self, Playlist.self]
@@ -526,7 +591,7 @@
 //                }
 //                
 //                try await player.play()
-//                playPauseButton.setImage(UIImage(systemName: "pause.fill"), for: .normal)
+//                playPauseButton.setImage(UIImage(systemName: UIConstants.pauseIconName), for: .normal)
 //                updateArtwork()
 //                isPlaying.toggle()
 //                
@@ -593,12 +658,12 @@
 //        let searchVC = SearchViewController()
 //        
 //        // Issue 2: 모달의 배경을 투명하게 처리하여 뒷배경이 더 보이도록 함
-//        searchVC.view.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+//        searchVC.view.backgroundColor = UIColor.black.withAlphaComponent(UIConstants.searchModalBackgroundAlpha)
 //        
 //        if let sheet = searchVC.sheetPresentationController {
 //            sheet.detents = [.medium(), .large()]
 //            sheet.prefersScrollingExpandsWhenScrolledToEdge = false
-//            sheet.preferredCornerRadius = 20
+//            sheet.preferredCornerRadius = UIConstants.sheetCornerRadius
 //        } else {
 //            searchVC.modalPresentationStyle = .overFullScreen
 //        }
